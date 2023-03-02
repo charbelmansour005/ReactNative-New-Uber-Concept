@@ -1,12 +1,22 @@
 import { Dimensions, StyleSheet } from "react-native"
-import { themeColors } from "../../config/themeColors"
-import { Platform } from "react-native"
 
 const { height, width } = Dimensions.get("screen")
 
-const isAndroid = Platform.OS === "android"
-
 export const styles = StyleSheet.create({
+  mainWrapper: { flex: 1, height: "100%", width: "100%" },
+  subTitle: { color: "white", fontSize: 12 },
+  chipStyle: {
+    backgroundColor: "transparent",
+    height: 35,
+    borderColor: "white",
+    borderWidth: 0.5,
+  },
+  chipWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "30%",
+  },
   background: {
     flex: 1,
     height: "100%",
@@ -44,5 +54,11 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     height: "100%",
     width: "100%",
+  },
+  welcomeTitle: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: width * 0.1,
   },
 })

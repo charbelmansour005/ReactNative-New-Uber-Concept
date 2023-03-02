@@ -36,6 +36,11 @@ type Props = {
   navigation: LoginNavProp
 }
 
+interface SignUpTexts {
+  title: string
+  subTitle: string
+}
+
 const initialSignUpState: SignUpState = {
   name: "",
   password: "",
@@ -49,6 +54,12 @@ const SignUp = ({ navigation }: Props) => {
 
   const [signupState, setSignUpState] =
     useState<SignUpState>(initialSignUpState)
+
+  const SignUpTexts: SignUpTexts = {
+    title: "Create your account",
+    subTitle:
+      "Please note that phone verification is required for signup. Your number will be used to verify your identity upon login.",
+  }
 
   const toast = useToast()
 
@@ -106,11 +117,8 @@ const SignUp = ({ navigation }: Props) => {
 
   const header = () => (
     <Fragment>
-      <Text style={styles.title}>Create your account</Text>
-      <Text style={styles.paragraph}>
-        Please note that phone verification is required for signup. Your number
-        will be used to verify your identity upon login.
-      </Text>
+      <Text style={styles.title}>{SignUpTexts.title}</Text>
+      <Text style={styles.paragraph}>{SignUpTexts.subTitle}</Text>
     </Fragment>
   )
 

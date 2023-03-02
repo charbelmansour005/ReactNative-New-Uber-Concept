@@ -1,11 +1,4 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ImageBackground,
-} from "react-native"
+import { Pressable, Text, View, ImageBackground } from "react-native"
 import LottieView from "lottie-react-native"
 import { StatusBar } from "expo-status-bar"
 import React from "react"
@@ -13,7 +6,7 @@ import { themeColors } from "../../config/themeColors"
 import { RootStackParamList } from "../../navigation/Navigation"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { styles } from "./styles"
-import { Chip, Divider } from "react-native-paper"
+import { Chip } from "react-native-paper"
 
 type IntroNavProp = StackNavigationProp<RootStackParamList, "Intro">
 
@@ -21,11 +14,25 @@ type Props = {
   navigation: IntroNavProp
 }
 
+type WelcomeTexts = {
+  title: string
+  subTitle: string
+  start: string
+}
+
 function Welcome({ navigation }: Props) {
   const { replace } = navigation
+
+  const WelcomeTexts: WelcomeTexts = {
+    title: "UBER TOUR",
+    subTitle: "Thank you for choosing us",
+    start: "Get Started",
+  }
+
   return (
-    <View style={{ flex: 1, height: "100%", width: "100%" }}>
+    <View style={styles.mainWrapper}>
       <StatusBar backgroundColor="transparent" style="light" />
+
       <ImageBackground
         source={require("../../../assets/slider/image3.jpeg")}
         style={styles.background}
@@ -43,38 +50,15 @@ function Welcome({ navigation }: Props) {
             loop={true}
           />
         </View>
-        <Text
-          style={{
-            color: "white",
-            textAlign: "center",
-            fontWeight: "bold",
-            fontSize: Dimensions.get("screen").width * 0.1,
-          }}
-        >
-          UBER TOUR
-        </Text>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "30%",
-          }}
-        >
-          <Chip
-            mode="outlined"
-            style={{
-              backgroundColor: "transparent",
-              height: 35,
-              borderColor: "white",
-              borderWidth: 0.5,
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 12 }}>
-              Thank you for choosing us
-            </Text>
+
+        <Text style={styles.welcomeTitle}>{WelcomeTexts.title}</Text>
+
+        <View style={styles.chipWrapper}>
+          <Chip mode="outlined" style={styles.chipStyle}>
+            <Text style={styles.subTitle}>{WelcomeTexts.subTitle}</Text>
           </Chip>
         </View>
+
         <Pressable
           style={styles.navigate}
           android_ripple={{
@@ -84,7 +68,7 @@ function Welcome({ navigation }: Props) {
           }}
           onPress={() => replace("Intro")}
         >
-          <Text style={styles.navigateText}>Get Started</Text>
+          <Text style={styles.navigateText}>{WelcomeTexts.start}</Text>
         </Pressable>
       </ImageBackground>
     </View>

@@ -25,6 +25,7 @@ const PassengerFlatlist = () => {
   const dispatch = useAppDispatch()
   const [isShown, setIsShown] = useState<boolean>(false)
   const [name, setName] = useState<string | null>(null)
+  const shown = useAppSelector((state) => state.topBar.shown)
 
   const toast = useToast()
 
@@ -32,6 +33,9 @@ const PassengerFlatlist = () => {
 
   const handleRefreshPassengerTours = () => {
     dispatch(fetchTours())
+    toast.show("Tours up to date", {
+      duration: Durations.SHORT,
+    })
   }
 
   const numPassengerTours = passengerTour.tours.filter((tour) => tour).length
@@ -65,8 +69,21 @@ const PassengerFlatlist = () => {
     return greeting
   }
 
-  // Usage:
   const greeting = getGreeting()
+
+  const ListFooterCMP = () => (
+    <View>
+      {passengerTour.tours.length ? (
+        <PassengerFlatListFooter />
+      ) : (
+        <React.Fragment></React.Fragment>
+      )}
+    </View>
+  )
+
+  const handleRefresh = async () => {
+    handleRefreshPassengerTours()
+  }
 
   return (
     <React.Fragment>
@@ -84,20 +101,16 @@ const PassengerFlatlist = () => {
                 <OriginalLoader />
               </View>
             )}
-            <View style={styles.chipWrapper}>
+            <View
+              style={{
+                marginTop: shown ? "2%" : "12%",
+                ...styles.chipWrapper,
+              }}
+            >
               <Chip
                 textStyle={{ fontSize: 13, fontWeight: "bold" }}
                 mode="outlined"
-                style={{
-                  height: 35,
-                  backgroundColor: "white",
-                  borderColor: themeColors.googleLightGray,
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  opacity: 1,
-                  borderRadius: 1,
-                }}
+                style={styles.chipStyle}
               >
                 {greeting} {name}
               </Chip>
@@ -184,18 +197,18 @@ const PassengerFlatlist = () => {
                   <TouchableOpacity
                     disabled={passengerTour.status === "loading"}
                     onLongPress={() =>
-                      toast.show("Show more info", {
+                      toast.show(`${isShown ? "Collapse" : "Expand"}`, {
                         placement: "top",
                         duration: Durations.SHORT,
                         type: "success",
                         style: { marginTop: "20%" },
-                        textStyle: { fontWeight: "300" },
+                        textStyle: { fontWeight: "normal" },
                       })
                     }
                     onPress={() => setIsShown(!isShown)}
                   >
                     <Feather
-                      name={isShown ? "chevron-up" : "chevron-down"}
+                      name={isShown ? "minimize" : "maximize"}
                       selectable={false}
                       size={20}
                       color={"gray"}
@@ -231,22 +244,12 @@ const PassengerFlatlist = () => {
           </React.Fragment>
         }
         ListEmptyComponent={<PassengerListEmptyCmp />}
-        ListFooterComponent={
-          <View>
-            {passengerTour.tours.length ? (
-              <PassengerFlatListFooter />
-            ) : (
-              <React.Fragment></React.Fragment>
-            )}
-          </View>
-        }
+        ListFooterComponent={ListFooterCMP}
         refreshControl={
           <RefreshControl
             enabled={passengerTour.status !== "loading" && !passengerTour.error}
             refreshing={passengerTour.status === "loading"}
-            onRefresh={async () => {
-              handleRefreshPassengerTours()
-            }}
+            onRefresh={handleRefresh}
             tintColor="black"
           />
         }
@@ -271,6 +274,16 @@ const PassengerFlatlist = () => {
 }
 
 const styles = StyleSheet.create({
+  chipStyle: {
+    height: 35,
+    backgroundColor: "white",
+    borderColor: themeColors.googleLightGray,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 1,
+    borderRadius: 4,
+  },
   chipWrapper: {
     display: "flex",
     justifyContent: "center",
@@ -299,7 +312,7 @@ const styles = StyleSheet.create({
     marginBottom: "1%",
     marginHorizontal: "2%",
     backgroundColor: "white",
-    borderRadius: 1,
+    borderRadius: 4,
     shadowColor: "gray",
     shadowOffset: {
       width: 0,

@@ -2,18 +2,24 @@ import {
   Alert,
   Dimensions,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native"
 import React, { useLayoutEffect } from "react"
 import { themeColors } from "../../config/themeColors"
 import * as SecureStore from "expo-secure-store"
 import { setUser } from "../../redux/login/loginSlice"
-import { useAppDispatch } from "../../redux/app/rtkHooks"
+import { useAppDispatch, useAppSelector } from "../../redux/app/rtkHooks"
+import { toggleTopBar } from "../../redux/passenger/topBarSlice"
+import { StatusBar } from "expo-status-bar"
+import { Feather } from "@expo/vector-icons"
 
 const Settings = ({ navigation }: any) => {
   const dispatch = useAppDispatch()
+  const shown = useAppSelector((state) => state.topBar.shown)
   const onLogout = async () => {
     await SecureStore.setItemAsync("access_token", "")
     dispatch(setUser({ access_token: null, role: null }))
@@ -46,29 +52,59 @@ const Settings = ({ navigation }: any) => {
     navigation.setOptions({
       title: "Settings",
       headerStyle: {
-        backgroundColor: themeColors.googleLightGray,
+        backgroundColor: "white",
       },
-      headerTintColor: themeColors.googleGray,
+      headerTintColor: themeColors.googleBlue,
       headerTitleStyle: {
-        fontWeight: "bold",
+        fontWeight: "normal",
+        fontSize: 14,
       },
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 10 }}
+          onPress={() => navigation.toggleDrawer()}
+        >
+          <Feather name="menu" size={25} color={themeColors.googleGray} />
+        </TouchableOpacity>
+      ),
     })
   }, [navigation])
 
   return (
-    <React.Fragment>
+    <ScrollView>
+      <StatusBar backgroundColor="white" style="dark" />
       <View style={styles.logoutWrapper}>
         <View style={styles.listHeaderWrapper}>
           <Pressable
             android_ripple={{ color: "gray" }}
-            style={styles.logoutButton}
+            style={{
+              backgroundColor: themeColors.googleRed,
+              ...styles.logoutButton,
+            }}
             onPress={askLogout}
           >
             <Text style={styles.listHeaderText}>Logout</Text>
           </Pressable>
         </View>
       </View>
-    </React.Fragment>
+
+      <View style={styles.logoutWrapper}>
+        <View style={styles.listHeaderWrapper}>
+          <Pressable
+            android_ripple={{ color: "gray" }}
+            style={{
+              backgroundColor: themeColors.googleBlue,
+              ...styles.logoutButton,
+            }}
+            onPress={() => dispatch(toggleTopBar())}
+          >
+            <Text style={styles.listHeaderText}>
+              {shown ? "Hide Home Topbar" : "Show Home top bar"}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -82,9 +118,8 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     padding: 5,
-    backgroundColor: themeColors.googleRed,
     borderRadius: 3,
-    marginVertical: 5,
+    marginTop: 5,
     width: "90%",
   },
   listHeaderText: {

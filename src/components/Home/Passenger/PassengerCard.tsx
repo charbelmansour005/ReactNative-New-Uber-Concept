@@ -109,7 +109,7 @@ const stylesPassengerCard = StyleSheet.create({
     marginVertical: "1%",
     marginHorizontal: "2%",
     backgroundColor: "white",
-    borderRadius: 1,
+    borderRadius: 4,
     shadowColor: "gray",
     shadowOffset: {
       width: 0,

@@ -33,6 +33,7 @@ const Drawer = createDrawerNavigator()
 const Navigation = () => {
   const access_token = useAppSelector((state) => state.user.user?.access_token)
   const role = useAppSelector((state) => state.user.user?.role)
+  const shown = useAppSelector((state) => state.topBar.shown)
 
   const handlePress = () => {
     Linking.openURL("https://www.google.com/maps/")
@@ -122,7 +123,11 @@ const Navigation = () => {
             initialRouteName={role === "passenger" ? "passenger" : "driver"}
           >
             {role === "passenger" && (
-              <Drawer.Screen name="Passenger" component={Passenger} />
+              <Drawer.Screen
+                name="Passenger"
+                component={Passenger}
+                options={{ headerShown: shown ? true : false }}
+              />
             )}
             {role === "driver" && (
               <Drawer.Screen name="Driver" component={Driver} />

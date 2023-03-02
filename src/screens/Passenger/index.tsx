@@ -11,7 +11,7 @@ import {
   Button,
 } from "react-native"
 import * as Location from "expo-location"
-import { IconButton } from "react-native-paper"
+import { IconButton, Paragraph } from "react-native-paper"
 import { useAppDispatch } from "../../redux/app/rtkHooks"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { useToast } from "react-native-toast-notifications"
@@ -71,7 +71,7 @@ const initialPassengerState: PassengerState = {
   showEndDate: false,
   endText: null,
   endTextUI: null,
-  mapVisible: true,
+  mapVisible: false,
   mapOptionModalVisible: false,
   username: "",
 }
@@ -116,7 +116,7 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
         <Feather
           name={mapVisible ? "eye-off" : "eye"}
           size={23}
-          color={mapVisible ? themeColors.googleBlue : "orange"}
+          color={mapVisible ? "orange" : themeColors.googleBlue}
           style={{
             marginRight: "10%",
           }}
@@ -147,18 +147,18 @@ const Passenger = ({ navigation }: any) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Uber Tour",
+      title: "Home",
       headerStyle: {
         backgroundColor: "white",
       },
-      headerTintColor: themeColors.googleGray,
+      headerTintColor: themeColors.googleBlue,
       headerTitleStyle: {
         fontWeight: "normal",
         fontSize: 14,
       },
       headerLeft: () => (
         <TouchableOpacity
-          style={{ marginLeft: "5%" }}
+          style={{ marginLeft: 10 }}
           onPress={() => navigation.toggleDrawer()}
         >
           <Feather name="menu" size={25} color={themeColors.googleGray} />
@@ -568,16 +568,28 @@ const Passenger = ({ navigation }: any) => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalText}>Hello, this is a modal!</Text>
-              <Button
-                title="Close Modal"
+              <Paragraph style={{ padding: 10 }}>
+                {
+                  "The map allows you to locate where you currently are\n\nYou can press on the eye to toggle it (show/hide)"
+                }
+              </Paragraph>
+              <TouchableOpacity
                 onPress={() =>
                   setPassengerState((prevState) => ({
                     ...prevState,
                     mapOptionModalVisible: false,
                   }))
                 }
-              />
+                style={{
+                  marginVertical: "5%",
+                  backgroundColor: "silver",
+                  padding: 5,
+                  paddingHorizontal: 9,
+                  borderRadius: 5,
+                }}
+              >
+                <Paragraph style={{ fontSize: 13 }}>Close</Paragraph>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
