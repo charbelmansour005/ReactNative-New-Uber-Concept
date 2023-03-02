@@ -26,7 +26,6 @@ import { Feather } from "@expo/vector-icons"
 import { StatusBar } from "expo-status-bar"
 import { Durations } from "../../helpers/durations"
 import { googleColors } from "../../helpers/googleSpinner"
-import * as SecureStore from "expo-secure-store"
 
 const initialRegion = {
   latitude: 33.8938,
@@ -104,7 +103,7 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
       {mapVisible && (
         <TouchableOpacity onPress={onPressSendLocation}>
           <Feather
-            name="arrow-up-circle"
+            name="map-pin"
             size={23}
             color={themeColors.googleBlue}
             style={{
@@ -115,7 +114,7 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
       )}
       <TouchableOpacity onPress={onPressMap} onLongPress={onLongPressMap}>
         <Feather
-          name="map"
+          name={mapVisible ? "eye-off" : "eye"}
           size={23}
           color={mapVisible ? themeColors.googleBlue : "orange"}
           style={{
@@ -138,28 +137,17 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
   )
 }
 
-const Passenger = () => {
-  const navigation = useNavigation()
+const Passenger = ({ navigation }: any) => {
+  // const navigation = useNavigation()
   const toast = useToast()
   const [passengerState, setPassengerState] = useState<PassengerState>(
     initialPassengerState
   )
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    const getShowName = async () => {
-      const PersonName: any = await SecureStore.getItemAsync("PersonName")
-      setPassengerState((prevState) => ({
-        ...prevState,
-        username: PersonName,
-      }))
-    }
-    getShowName()
-  }, [])
-
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `Hello ${passengerState.username}`,
+      title: "Uber Tour",
       headerStyle: {
         backgroundColor: "white",
       },
@@ -168,6 +156,14 @@ const Passenger = () => {
         fontWeight: "normal",
         fontSize: 14,
       },
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: "5%" }}
+          onPress={() => navigation.toggleDrawer()}
+        >
+          <Feather name="menu" size={25} color={themeColors.googleGray} />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <HeaderRight
           onPressAdd={() =>
@@ -382,7 +378,7 @@ const Passenger = () => {
               {passengerState.fetchingLocation && (
                 <React.Fragment>
                   <ActivityIndicator
-                    size="large"
+                    size="small"
                     color={chosenSpinnerColor}
                     style={{
                       position: "absolute",

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { useToast } from "react-native-toast-notifications"
 import { View, Text, SafeAreaView } from "react-native"
-import LottieView from "lottie-react-native"
 import * as Location from "expo-location"
 import { StatusBar } from "expo-status-bar"
 import { themeColors } from "../../config/themeColors"
@@ -16,6 +15,7 @@ import {
   LandingSignInBTN,
   LandingSignUpBTN,
 } from "../../components/index"
+import OriginalLoader from "../../components/UI/OriginalLoader"
 
 const initialRegion = {
   latitude: 33.8938,
@@ -143,17 +143,7 @@ export default function Landing({ navigation }: Props) {
       <>
         {landingState.loading && (
           <View style={styles.centerLoad}>
-            <LottieView
-              speed={5}
-              style={{
-                height: 50,
-              }}
-              source={{
-                uri: "https://assets6.lottiefiles.com/packages/lf20_2tyhlsvz.json",
-              }}
-              autoPlay={true}
-              loop={true}
-            />
+            <OriginalLoader />
           </View>
         )}
       </>

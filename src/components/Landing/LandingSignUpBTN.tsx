@@ -13,8 +13,9 @@ const LandingSignUpBTN = ({ replace }: NavigationProps) => {
         style={styles.blueButtons}
         android_ripple={{
           color: themeColors.googleLightGray,
-          radius: 30,
+          radius: 50,
           borderless: true,
+          foreground: true,
         }}
         onPress={() => replace("SignUp")}
       >

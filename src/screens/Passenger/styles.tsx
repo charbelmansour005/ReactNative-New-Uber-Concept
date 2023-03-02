@@ -2,6 +2,27 @@ import { themeColors } from "../../config/themeColors"
 import { StyleSheet, Dimensions } from "react-native"
 
 export const styles = StyleSheet.create({
+  //insta search bar
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f2f2f2",
+    borderRadius: 5,
+    // marginHorizontal: 20,
+    paddingLeft: 10,
+    paddingRight: 5,
+    marginRight: "2%",
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  input: {
+    // flex: 1,
+    height: 40,
+    borderRadius: 5,
+    width: "50%",
+  },
+  //insta search bar end
   listFooterText: {
     color: themeColors.googleGray,
     fontWeight: "bold",
@@ -49,7 +70,7 @@ export const styles = StyleSheet.create({
     height: Dimensions.get("screen").height * 0.3,
   },
   blur: {
-    opacity: 1,
+    opacity: 0.7,
     width: "100%",
     height: Dimensions.get("screen").height * 0.3,
   },

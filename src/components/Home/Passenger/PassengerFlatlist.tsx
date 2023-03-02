@@ -4,26 +4,27 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Text,
 } from "react-native"
 import { useAppDispatch, useAppSelector } from "../../../redux/app/rtkHooks"
-import React from "react"
+import React, { useEffect } from "react"
 import PassengerCard from "./PassengerCard"
 import { fetchTours } from "../../../redux/passenger/tour/tourSlice"
 import { themeColors } from "../../../config/themeColors"
 import PassengerFlatListFooter from "./PassengerFlatListFooter"
 import PassengerListEmptyCmp from "./PassengerListEmptyCmp"
-import { ActivityIndicator, Card, Divider, Paragraph } from "react-native-paper"
+import { Card, Divider, Paragraph } from "react-native-paper"
 import { useState } from "react"
 import { Feather } from "@expo/vector-icons"
 import { useToast } from "react-native-toast-notifications"
 import { Durations } from "../../../helpers/durations"
 import { Chip } from "react-native-paper"
-import LottieView from "lottie-react-native"
+import OriginalLoader from "../../UI/OriginalLoader"
+import * as SecureStore from "expo-secure-store"
 
 const PassengerFlatlist = () => {
   const dispatch = useAppDispatch()
   const [isShown, setIsShown] = useState<boolean>(false)
+  const [name, setName] = useState<string | null>(null)
 
   const toast = useToast()
 
@@ -41,6 +42,32 @@ const PassengerFlatlist = () => {
     (tour) => !tour.taken
   ).length
 
+  useEffect(() => {
+    const getShowName = async () => {
+      const PersonName: any = await SecureStore.getItemAsync("PersonName")
+      setName(PersonName)
+    }
+    getShowName()
+  }, [])
+
+  function getGreeting() {
+    const currentHour = new Date().getHours()
+    let greeting = ""
+
+    if (currentHour >= 5 && currentHour < 12) {
+      greeting = "Good morning"
+    } else if (currentHour >= 12 && currentHour < 18) {
+      greeting = "Good afternoon"
+    } else {
+      greeting = "Good evening"
+    }
+
+    return greeting
+  }
+
+  // Usage:
+  const greeting = getGreeting()
+
   return (
     <React.Fragment>
       <FlatList
@@ -54,19 +81,27 @@ const PassengerFlatlist = () => {
                   marginTop: "2%",
                 }}
               >
-                <LottieView
-                  speed={5}
-                  style={{
-                    height: 50,
-                  }}
-                  source={{
-                    uri: "https://assets6.lottiefiles.com/packages/lf20_2tyhlsvz.json",
-                  }}
-                  autoPlay={true}
-                  loop={true}
-                />
+                <OriginalLoader />
               </View>
             )}
+            <View style={styles.chipWrapper}>
+              <Chip
+                textStyle={{ fontSize: 13, fontWeight: "bold" }}
+                mode="outlined"
+                style={{
+                  height: 35,
+                  backgroundColor: "white",
+                  borderColor: themeColors.googleLightGray,
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: 1,
+                  borderRadius: 1,
+                }}
+              >
+                {greeting} {name}
+              </Chip>
+            </View>
             <Card mode="outlined" style={styles.cardContainer}>
               <Card.Content>
                 <View style={styles.spaceBetween}>
@@ -236,6 +271,13 @@ const PassengerFlatlist = () => {
 }
 
 const styles = StyleSheet.create({
+  chipWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: "2%",
+    marginHorizontal: "2%",
+  },
   spaceBetween: {
     display: "flex",
     flexDirection: "row",
@@ -253,7 +295,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   cardContainer: {
-    marginTop: "2%",
+    marginTop: "0%",
     marginBottom: "1%",
     marginHorizontal: "2%",
     backgroundColor: "white",
