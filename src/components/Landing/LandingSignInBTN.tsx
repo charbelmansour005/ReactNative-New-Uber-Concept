@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   blueButtons: {
     backgroundColor: themeColors.googleGray,
     width: "48%",
-    padding: 10,
+    padding: 5,
     borderRadius: 1,
     borderWidth: isAndroid ? 0.5 : 0,
     borderColor: isAndroid ? "darkgray" : undefined,

@@ -124,9 +124,7 @@ export default function Landing({ navigation }: Props) {
   const wrapperStyles = [
     styles.mainWrapper,
     {
-      borderTopColor: landingState.loading
-        ? themeColors.googleGreen
-        : "#dbdbdb",
+      borderTopColor: landingState.loading ? "orange" : themeColors.googleGreen,
     },
   ]
 

@@ -49,7 +49,7 @@ const Navigation = () => {
         <Stack.Screen
           name="Intro"
           component={Intro}
-          options={{ animation: "simple_push" }}
+          options={{ animation: "fade_from_bottom" }}
         />
 
         <Stack.Screen

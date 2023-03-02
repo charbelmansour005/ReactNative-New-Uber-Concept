@@ -31,14 +31,14 @@ const slides: Slide[] = [
     key: "two",
     title: "Create your own tour itinerary",
     text: "Choose your own adventure and customize your tour route to see the sights that interest you the most.",
-    image: require("../../../assets/slider/image1.jpeg"),
+    image: require("../../../assets/slider/image2.jpeg"),
     backgroundColor: "#febe29",
   },
   {
     key: "three",
     title: "Safe and reliable transportation",
     text: "Sit back and relax as our vetted drivers take you on a personalized tour of the city, with the safety and comfort you can trust.",
-    image: require("../../../assets/slider/image1.jpeg"),
+    image: require("../../../assets/slider/image3.jpeg"),
     backgroundColor: "#22bcb5",
   },
 ]
@@ -49,7 +49,7 @@ const Intro = ({ navigation }: Props) => {
   const renderItem = ({ item }: { item: Slide }) => {
     return (
       <ImageBackground
-        source={require("../../../assets/slider/image1.jpeg")}
+        source={require("../../../assets/slider/image2.jpeg")}
         style={styles.background}
         resizeMode="cover"
         blurRadius={10}

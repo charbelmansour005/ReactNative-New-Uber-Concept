@@ -6,7 +6,7 @@ type Props = {}
 
 const PassengerFlatListFooter = (props: Props) => {
   return (
-    <View style={{ marginBottom: 200 }}>
+    <View style={{ marginBottom: 20 }}>
       <View style={styles.listFooterWrapper}>
         <Text style={styles.listFooterText}>End Reached</Text>
       </View>

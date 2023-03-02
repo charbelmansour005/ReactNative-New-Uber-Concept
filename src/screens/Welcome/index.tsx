@@ -13,6 +13,7 @@ import { themeColors } from "../../config/themeColors"
 import { RootStackParamList } from "../../navigation/Navigation"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { styles } from "./styles"
+import { Chip, Divider } from "react-native-paper"
 
 type IntroNavProp = StackNavigationProp<RootStackParamList, "Intro">
 
@@ -24,13 +25,13 @@ function Welcome({ navigation }: Props) {
   const { replace } = navigation
   return (
     <View style={{ flex: 1, height: "100%", width: "100%" }}>
+      <StatusBar backgroundColor="transparent" style="light" />
       <ImageBackground
-        source={require("../../../assets/slider/image1.jpeg")}
+        source={require("../../../assets/slider/image3.jpeg")}
         style={styles.background}
         resizeMode="cover"
-        blurRadius={5}
+        blurRadius={9}
       >
-        <StatusBar backgroundColor={themeColors.googleGray} style="light" />
         <View style={styles.animationWrapper}>
           <LottieView
             speed={1}
@@ -52,6 +53,28 @@ function Welcome({ navigation }: Props) {
         >
           UBER TOUR
         </Text>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "30%",
+          }}
+        >
+          <Chip
+            mode="outlined"
+            style={{
+              backgroundColor: "transparent",
+              height: 35,
+              borderColor: "white",
+              borderWidth: 0.5,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 12 }}>
+              Thank you for choosing us
+            </Text>
+          </Chip>
+        </View>
         <Pressable
           style={styles.navigate}
           android_ripple={{

@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
     borderRightColor: "#dbdbdb",
     marginTop: 10,
   },
+
   cardWrapper: {
     marginHorizontal: 10,
     borderRadius: 2,
@@ -96,5 +97,21 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "80%",
+  },
+  //modal map
+  modalMap: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContainerMap: {
+    backgroundColor: "rgba(0,0,0,0.5)",
+    height: "50%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+  },
+  modalText: {
+    fontSize: 24,
+    marginBottom: 20,
   },
 })

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Platform,
   TouchableOpacity,
+  Button,
 } from "react-native"
 import * as Location from "expo-location"
 import { IconButton } from "react-native-paper"
@@ -25,6 +26,7 @@ import { Feather } from "@expo/vector-icons"
 import { StatusBar } from "expo-status-bar"
 import { Durations } from "../../helpers/durations"
 import { googleColors } from "../../helpers/googleSpinner"
+import * as SecureStore from "expo-secure-store"
 
 const initialRegion = {
   latitude: 33.8938,
@@ -51,6 +53,8 @@ interface PassengerState {
   endText: string | null
   endTextUI: string | null
   mapVisible: boolean
+  mapOptionModalVisible: boolean
+  username: string
 }
 
 const initialPassengerState: PassengerState = {
@@ -69,10 +73,14 @@ const initialPassengerState: PassengerState = {
   endText: null,
   endTextUI: null,
   mapVisible: true,
+  mapOptionModalVisible: false,
+  username: "",
 }
+
 type HeaderRightProps = {
   onPressAdd: () => void
   onPressMap: () => void
+  onLongPressMap: () => void
   onPressSendLocation: () => void
   mapVisible: boolean
 }
@@ -80,6 +88,7 @@ type HeaderRightProps = {
 const HeaderRight: React.FC<HeaderRightProps> = ({
   onPressAdd,
   onPressMap,
+  onLongPressMap,
   onPressSendLocation,
   mapVisible,
 }) => {
@@ -104,11 +113,11 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
           />
         </TouchableOpacity>
       )}
-      <TouchableOpacity onPress={onPressMap}>
+      <TouchableOpacity onPress={onPressMap} onLongPress={onLongPressMap}>
         <Feather
           name="map"
           size={23}
-          color={themeColors.googleBlue}
+          color={mapVisible ? themeColors.googleBlue : "orange"}
           style={{
             marginRight: "10%",
           }}
@@ -137,15 +146,27 @@ const Passenger = () => {
   )
   const dispatch = useAppDispatch()
 
+  useEffect(() => {
+    const getShowName = async () => {
+      const PersonName: any = await SecureStore.getItemAsync("PersonName")
+      setPassengerState((prevState) => ({
+        ...prevState,
+        username: PersonName,
+      }))
+    }
+    getShowName()
+  }, [])
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Home",
+      title: `Hello ${passengerState.username}`,
       headerStyle: {
         backgroundColor: "white",
       },
       headerTintColor: themeColors.googleGray,
       headerTitleStyle: {
-        fontWeight: "bold",
+        fontWeight: "normal",
+        fontSize: 14,
       },
       headerRight: () => (
         <HeaderRight
@@ -159,6 +180,12 @@ const Passenger = () => {
             setPassengerState((prevState) => ({
               ...prevState,
               mapVisible: !prevState.mapVisible,
+            }))
+          }
+          onLongPressMap={() =>
+            setPassengerState((prevState) => ({
+              ...prevState,
+              mapOptionModalVisible: true,
             }))
           }
           onPressSendLocation={autoSendLocation}
@@ -534,6 +561,27 @@ const Passenger = () => {
                   onPress={startTourHandler}
                 />
               </View>
+            </View>
+          </View>
+        </Modal>
+        {/* options modal  */}
+        <Modal
+          visible={passengerState.mapOptionModalVisible}
+          animationType="slide"
+          transparent={true}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>Hello, this is a modal!</Text>
+              <Button
+                title="Close Modal"
+                onPress={() =>
+                  setPassengerState((prevState) => ({
+                    ...prevState,
+                    mapOptionModalVisible: false,
+                  }))
+                }
+              />
             </View>
           </View>
         </Modal>
