@@ -4,11 +4,11 @@ import { RadioButton } from "react-native-paper"
 import { themeColors } from "../../config/themeColors"
 
 interface FunctionProps {
-  setRole: (args?: any) => void
+  setRole: (args?: any) => any
 }
 
 interface RadioButtonRoleProps extends FunctionProps {
-  role: any
+  role: string
 }
 
 const RadioButtonRole = ({ ...props }: RadioButtonRoleProps) => {

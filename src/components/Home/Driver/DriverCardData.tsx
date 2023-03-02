@@ -5,7 +5,7 @@ import { Divider, IconButton } from "react-native-paper"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 type DriverCardDataProps = {
-  index: any
+  index: number
   distanceInKM: number
   startTime: string
   endTime: string

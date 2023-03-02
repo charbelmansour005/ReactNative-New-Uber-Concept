@@ -7,7 +7,7 @@ type Props = {
   mapRegion: any
 }
 
-export const LandingMapView = ({ mapRegion }: Props) => {
+const LandingMapView = ({ mapRegion }: Props) => {
   return (
     <View>
       <MapView style={styles.map} region={mapRegion}>
@@ -30,3 +30,5 @@ const styles = StyleSheet.create({
     borderBottomColor: "gray",
   },
 })
+
+export default LandingMapView

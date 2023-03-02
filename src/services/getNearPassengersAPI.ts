@@ -1,6 +1,6 @@
 import { AxiosResponse, AxiosError } from "axios"
 import { instance } from "./api"
-import * as SecureStore from "expo-secure-store"
+// import { NearPassengers, CustomError } from "../types/getNearPassengerAPI.types"
 
 interface NearPassengers {
   _id: string

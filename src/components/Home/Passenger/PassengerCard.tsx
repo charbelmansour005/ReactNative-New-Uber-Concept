@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View, Image } from "react-native"
 import React from "react"
 import { Card, Divider, Paragraph, Title } from "react-native-paper"
 import { Ionicons } from "@expo/vector-icons"
+import { themeColors } from "../../../config/themeColors"
+import { Feather } from "@expo/vector-icons"
 
 type PassengerCardProps = {
   index: number
@@ -21,11 +23,31 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
   }
   return (
     <React.Fragment>
-      <Card style={stylesPassengerCard.cardContainer}>
+      <Card mode="outlined" style={stylesPassengerCard.cardContainer}>
         <Card.Content>
-          <Title style={stylesPassengerCard.cardTitle}>
-            Tour #{props.index + 1}
-          </Title>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Title
+              style={{
+                color: props.taken ? themeColors.googleBlue : "orange",
+                ...stylesPassengerCard.cardTitle,
+              }}
+            >
+              Tour {props.index + 1}
+            </Title>
+            <Feather
+              name={props.taken ? "check-circle" : "clock"}
+              selectable={false}
+              size={20}
+              color={props.taken ? themeColors.googleBlue : "orange"}
+            />
+          </View>
           <Divider style={stylesPassengerCard.divider} />
           <View style={stylesPassengerCard.cardContent}>
             <Ionicons name="md-time" size={15} color="gray" />
@@ -43,20 +65,28 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
             <Ionicons
               name="md-car"
               size={15}
-              color={props.taken ? "green" : "red"}
+              color={props.taken ? themeColors.googleBlue : "orange"}
             />
             <Paragraph style={stylesPassengerCard.cardContentText}>
-              {props.taken ? "Taken" : "Available"}
+              {props.taken ? "A driver booked your tour!" : "Pending"}
             </Paragraph>
           </View>
           <View style={stylesPassengerCard.cardContent}>
-            <Ionicons name="person" size={15} color="gray" />
+            <Ionicons
+              name="person"
+              size={15}
+              color={props.taken ? themeColors.googleBlue : "orange"}
+            />
             <Paragraph style={stylesPassengerCard.cardContentText}>
               {driverName}
             </Paragraph>
           </View>
           <View style={stylesPassengerCard.cardContent}>
-            <Ionicons name="ios-call" size={15} color="gray" />
+            <Ionicons
+              name="ios-call"
+              size={15}
+              color={props.taken ? themeColors.googleBlue : "orange"}
+            />
             <Paragraph style={stylesPassengerCard.cardContentText}>
               {driverPhoneNumber}
             </Paragraph>
@@ -76,10 +106,10 @@ const stylesPassengerCard = StyleSheet.create({
     backgroundColor: "lightgray",
   },
   cardContainer: {
-    marginVertical: 8,
-    marginHorizontal: 8,
+    marginVertical: "1%",
+    marginHorizontal: "2%",
     backgroundColor: "white",
-    borderRadius: 8,
+    borderRadius: 1,
     shadowColor: "gray",
     shadowOffset: {
       width: 0,
@@ -87,13 +117,12 @@ const stylesPassengerCard = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
+    padding: 0,
+    borderColor: themeColors.googleLightGray,
   },
   cardTitle: {
-    fontWeight: "bold",
-    marginBottom: 8,
-    color: "darkslategray",
+    fontSize: 18,
   },
   cardContent: {
     flexDirection: "row",
@@ -102,7 +131,7 @@ const stylesPassengerCard = StyleSheet.create({
   },
   cardContentText: {
     marginLeft: 8,
-    fontSize: 16,
+    fontSize: 14,
     color: "gray",
   },
   divider: {

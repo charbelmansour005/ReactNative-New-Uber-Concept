@@ -1,8 +1,7 @@
-import * as SecureStore from "expo-secure-store"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { AxiosRequestConfig, AxiosResponse } from "axios"
+import { AxiosResponse } from "axios"
 import { instance } from "../../../services/api"
-import { Tour, TourState } from "../../../interfaces/tour"
+import { Tour, TourState } from "../../../types/tour"
 
 export const fetchTours = createAsyncThunk<
   Tour[],

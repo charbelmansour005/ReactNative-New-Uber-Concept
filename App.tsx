@@ -1,5 +1,6 @@
+import "react-native-gesture-handler"
 import { ToastProvider } from "react-native-toast-notifications"
-import { Navigation } from "./src/navigation/Navigation"
+import Navigation from "./src/navigation/Navigation"
 import { Provider } from "react-redux"
 import store from "./src/redux/app/store"
 import { QueryClientProvider, QueryClient } from "react-query"

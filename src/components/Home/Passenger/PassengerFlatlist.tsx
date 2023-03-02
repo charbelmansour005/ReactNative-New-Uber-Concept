@@ -1,25 +1,28 @@
 import {
-  Alert,
   FlatList,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
+  TouchableOpacity,
 } from "react-native"
 import { useAppDispatch, useAppSelector } from "../../../redux/app/rtkHooks"
 import React from "react"
 import PassengerCard from "./PassengerCard"
 import { fetchTours } from "../../../redux/passenger/tour/tourSlice"
 import { themeColors } from "../../../config/themeColors"
-import SharedFlatListHeader from "../Shared/SharedFlatListHeader"
 import PassengerFlatListFooter from "./PassengerFlatListFooter"
-import { setUser } from "../../../redux/login/loginSlice"
-import * as SecureStore from "expo-secure-store"
+import PassengerListEmptyCmp from "./PassengerListEmptyCmp"
+import { Card, Divider, Paragraph } from "react-native-paper"
+import { useState } from "react"
+import { Feather } from "@expo/vector-icons"
+import { useToast } from "react-native-toast-notifications"
+import { Durations } from "../../../helpers/durations"
 
-type Props = {}
-
-const PassengerFlatlist = (props: Props) => {
+const PassengerFlatlist = () => {
   const dispatch = useAppDispatch()
+  const [isShown, setIsShown] = useState<boolean>(false)
+
+  const toast = useToast()
 
   const passengerTour = useAppSelector((state) => state.passengertour)
 
@@ -27,44 +30,148 @@ const PassengerFlatlist = (props: Props) => {
     dispatch(fetchTours())
   }
 
-  const onLogout = async () => {
-    await SecureStore.setItemAsync("access_token", "")
-    dispatch(setUser({ access_token: null, role: null }))
-  }
-  const askLogout = () =>
-    Alert.alert(
-      "Attention",
-      "You are about to logout.\nClick away to cancel.",
-      [
-        {
-          style: "cancel",
-        },
-        {
-          text: "Confirm",
-          onPress: () => {
-            onLogout()
-          },
-          style: "cancel",
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    )
-
-  const renderListEmptyComponent = () => (
-    <View style={styles.listFooterWrapper}>
-      <Text style={styles.listFooterText}>
-        You haven't started any tours yet
-      </Text>
-    </View>
-  )
+  const numPassengerTours = passengerTour.tours.filter((tour) => tour).length
+  const numPassengerToursTaken = passengerTour.tours.filter(
+    (tour) => tour.taken
+  ).length
+  const numPassengerToursAvail = passengerTour.tours.filter(
+    (tour) => !tour.taken
+  ).length
 
   return (
     <React.Fragment>
       <FlatList
-        ListHeaderComponent={<SharedFlatListHeader askLogout={askLogout} />}
-        ListEmptyComponent={renderListEmptyComponent}
+        endFillColor={themeColors.googleLightGray}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <Card style={styles.cardContainer}>
+            <Card.Content>
+              <View style={styles.spaceBetween}>
+                {passengerTour.status === "loading" ? (
+                  <Paragraph
+                    style={{ color: "gray", ...styles.cardContentText }}
+                  >
+                    Loading
+                  </Paragraph>
+                ) : (
+                  <>
+                    <Paragraph
+                      style={{ color: "gray", ...styles.cardContentText }}
+                    >
+                      All your tours
+                    </Paragraph>
+                    <Paragraph
+                      style={{ color: "gray", ...styles.cardContentText }}
+                    >
+                      {numPassengerTours}
+                    </Paragraph>
+                  </>
+                )}
+              </View>
+
+              {isShown && (
+                <>
+                  <Divider />
+                  <View style={styles.spaceBetween}>
+                    <Paragraph
+                      style={{
+                        color:
+                          passengerTour.status === "loading"
+                            ? "gray"
+                            : themeColors.googleBlue,
+                        ...styles.cardContentText,
+                      }}
+                    >
+                      {passengerTour.status === "loading"
+                        ? "Loading"
+                        : "Your booked tours"}
+                    </Paragraph>
+                    <Paragraph
+                      style={{
+                        color: themeColors.googleBlue,
+                        ...styles.cardContentText,
+                      }}
+                    >
+                      {passengerTour.status === "loading"
+                        ? ""
+                        : numPassengerToursTaken}
+                    </Paragraph>
+                  </View>
+                  <Divider />
+                  <View style={styles.spaceBetween}>
+                    <Paragraph
+                      style={{
+                        color:
+                          passengerTour.status === "loading"
+                            ? "gray"
+                            : "orange",
+                        ...styles.cardContentText,
+                      }}
+                    >
+                      {passengerTour.status === "loading"
+                        ? "Loading"
+                        : "Your pending tours"}
+                    </Paragraph>
+                    <Paragraph
+                      style={{ color: "orange", ...styles.cardContentText }}
+                    >
+                      {passengerTour.status === "loading"
+                        ? ""
+                        : numPassengerToursAvail}
+                    </Paragraph>
+                  </View>
+                </>
+              )}
+              <View style={styles.flexRow}>
+                <TouchableOpacity
+                  disabled={passengerTour.status === "loading"}
+                  onLongPress={() =>
+                    toast.show("Show more info", {
+                      placement: "top",
+                      duration: Durations.SHORT,
+                      type: "success",
+                      style: { marginTop: "20%" },
+                      textStyle: { fontWeight: "300" },
+                    })
+                  }
+                  onPress={() => setIsShown(!isShown)}
+                >
+                  <Feather
+                    name={isShown ? "chevron-up" : "chevron-down"}
+                    selectable={false}
+                    size={20}
+                    color={"gray"}
+                    style={{
+                      marginRight: "5%",
+                    }}
+                  />
+                </TouchableOpacity>
+                {isShown && (
+                  <TouchableOpacity
+                    disabled={passengerTour.status === "loading"}
+                    onLongPress={() =>
+                      toast.show("Show more info", {
+                        placement: "top",
+                        duration: Durations.SHORT,
+                        type: "success",
+                        style: { marginTop: "20%" },
+                        textStyle: { fontWeight: "300" },
+                      })
+                    }
+                  >
+                    <Feather
+                      name="info"
+                      selectable={false}
+                      size={20}
+                      color={"gray"}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </Card.Content>
+          </Card>
+        }
+        ListEmptyComponent={<PassengerListEmptyCmp />}
         ListFooterComponent={
           <View>
             {passengerTour.tours.length ? (
@@ -104,25 +211,40 @@ const PassengerFlatlist = (props: Props) => {
   )
 }
 
-export default PassengerFlatlist
-
 const styles = StyleSheet.create({
-  listFooterWrapper: {
-    marginBottom: 230,
+  spaceBetween: {
+    display: "flex",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: themeColors.googleLightGray,
-    marginTop: 20,
+    justifyContent: "space-between",
   },
-  listFooterText: {
-    color: themeColors.googleGray,
-    fontWeight: "bold",
-    fontSize: 12,
-    textAlign: "center",
-    backgroundColor: themeColors.googleLightGray,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 5,
-    margin: 5,
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  cardContentText: {
+    fontSize: 14,
+    marginVertical: 12,
+  },
+  cardContainer: {
+    marginTop: "2%",
+    marginBottom: "1%",
+    marginHorizontal: "2%",
+    backgroundColor: "white",
+    borderRadius: 1,
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 0,
+    borderColor: themeColors.googleLightGray,
   },
 })
+
+export default PassengerFlatlist

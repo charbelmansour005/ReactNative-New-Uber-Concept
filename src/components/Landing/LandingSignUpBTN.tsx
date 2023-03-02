@@ -6,13 +6,13 @@ type NavigationProps = {
   replace: any
 }
 
-export const LandingSignUpBTN = ({ replace }: NavigationProps) => {
+const LandingSignUpBTN = ({ replace }: NavigationProps) => {
   return (
     <React.Fragment>
       <Pressable
         style={styles.blueButtons}
         android_ripple={{
-          color: themeColors.googleBlue,
+          color: themeColors.googleLightGray,
           radius: 30,
           borderless: true,
         }}
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeColors.googleGray,
     width: "48%",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 1,
     borderWidth: 0.5,
     borderColor: "darkgray",
   },
@@ -39,3 +39,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 })
+
+export default LandingSignUpBTN

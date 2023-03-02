@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, Platform } from "react-native"
 import React from "react"
 import { themeColors } from "../../config/themeColors"
 
@@ -6,13 +6,15 @@ type NavigationProps = {
   replace: any
 }
 
+const isAndroid = Platform.OS === "android"
+
 const LandingSignInBTN = ({ replace }: NavigationProps) => {
   return (
     <React.Fragment>
       <Pressable
         style={styles.blueButtons}
         android_ripple={{
-          color: themeColors.googleBlue,
+          color: themeColors.googleLightGray,
           radius: 30,
           borderless: true,
         }}
@@ -31,9 +33,9 @@ const styles = StyleSheet.create({
     backgroundColor: themeColors.googleGray,
     width: "48%",
     padding: 10,
-    borderRadius: 5,
-    borderWidth: 0.5,
-    borderColor: "darkgray",
+    borderRadius: 1,
+    borderWidth: isAndroid ? 0.5 : 0,
+    borderColor: isAndroid ? "darkgray" : undefined,
   },
   blueText: {
     color: "white",

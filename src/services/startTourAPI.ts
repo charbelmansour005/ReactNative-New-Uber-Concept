@@ -1,8 +1,16 @@
 import { instance } from "./api"
 
-export const startTourAPI = async (startText: any, endText: any) => {
+interface Payload {
+  startTime: string | null
+  endTime: string | null
+}
+
+export const startTourAPI = async (
+  startText: string | null,
+  endText: string | null
+) => {
   try {
-    const data = {
+    const data: Payload = {
       startTime: startText,
       endTime: endText,
     }

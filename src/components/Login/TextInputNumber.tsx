@@ -3,7 +3,7 @@ import React from "react"
 import { TextInput } from "react-native-paper"
 
 interface Props {
-  phoneNumber: string
+  phoneNumber: string | undefined
   setPhoneNumber: (args?: any) => void
 }
 
