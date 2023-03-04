@@ -28,7 +28,7 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
 
   return (
     <React.Fragment>
-      <Card mode="elevated" style={stylesPassengerCard.cardContainer}>
+      <Card mode="contained" style={stylesPassengerCard.cardContainer}>
         <Card.Content>
           <View style={stylesPassengerCard.cardWrapper}>
             <Title

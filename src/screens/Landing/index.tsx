@@ -19,8 +19,8 @@ import OriginalLoader from "../../components/UI/OriginalLoader"
 const initialRegion = {
   latitude: 33.8938,
   longitude: 35.5018,
-  latitudeDelta: 2.01,
-  longitudeDelta: 2.01,
+  latitudeDelta: 14.01,
+  longitudeDelta: 14.01,
 }
 
 type Region = typeof initialRegion

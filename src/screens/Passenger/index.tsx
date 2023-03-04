@@ -375,7 +375,7 @@ function Passenger({ navigation }: MyScreenProps): JSX.Element {
 
   const ItemSeperatorComponent = (): JSX.Element => (
     <View style={{ marginHorizontal: "5%", marginVertical: "1%" }}>
-      <Divider style={{ height: 1 }} />
+      <Divider style={{ height: 0.5 }} />
     </View>
   )
 

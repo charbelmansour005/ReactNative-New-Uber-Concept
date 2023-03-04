@@ -1,10 +1,11 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React from "react"
 import { useAppSelector } from "../../../redux/app/rtkHooks"
 import OriginalLoader from "../../UI/OriginalLoader"
 import { Card, Divider, Paragraph } from "react-native-paper"
-import { Feather } from "@expo/vector-icons"
 import { themeColors } from "../../../config/themeColors"
+import PassenerChevronButton from "./PassenerChevronButton"
+import PassengerInfoButton from "./PassengerInfoButton"
 
 type Props = {
   numPassengerTours: number
@@ -38,7 +39,7 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                   <Paragraph
                     style={{ color: "gray", ...styles.cardContentText }}
                   >
-                    Please wait
+                    Fetching new data...
                   </Paragraph>
                 ) : (
                   <>
@@ -70,7 +71,7 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                       }}
                     >
                       {passengerTour.status === "loading"
-                        ? "Please wait"
+                        ? "Fetching new data..."
                         : "Your booked tours"}
                     </Paragraph>
                     <Paragraph
@@ -96,7 +97,7 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                       }}
                     >
                       {passengerTour.status === "loading"
-                        ? "Please wait"
+                        ? "Fetching new data..."
                         : "Your pending tours"}
                     </Paragraph>
                     <Paragraph
@@ -113,34 +114,15 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                 </>
               )}
               <View style={styles.flexRow}>
-                <TouchableOpacity
-                  disabled={passengerTour.status === "loading"}
-                  onLongPress={props.handleChevronLongPress}
-                  onPress={() => props.setIsShown(!props.isShown)}
-                >
-                  <Feather
-                    name={props.isShown ? "chevron-up" : "chevron-down"}
-                    selectable={false}
-                    size={20}
-                    color={"gray"}
-                    style={{
-                      marginRight: "5%",
-                    }}
-                  />
-                </TouchableOpacity>
+                <PassenerChevronButton
+                  isShown={props.isShown}
+                  handleChevronLongPress={props.handleChevronLongPress}
+                  setIsShown={props.setIsShown}
+                />
                 {props.isShown && (
-                  <TouchableOpacity
-                    style={{ position: "absolute", right: 0 }}
-                    disabled={passengerTour.status === "loading"}
-                    onPress={props.handleInfoOnPress}
-                  >
-                    <Feather
-                      name="info"
-                      selectable={false}
-                      size={20}
-                      color={"gray"}
-                    />
-                  </TouchableOpacity>
+                  <PassengerInfoButton
+                    handleInfoOnPress={props.handleInfoOnPress}
+                  />
                 )}
               </View>
             </Card.Content>

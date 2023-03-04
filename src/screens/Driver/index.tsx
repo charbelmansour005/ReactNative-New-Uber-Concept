@@ -6,14 +6,12 @@ import {
   ActivityIndicator,
   FlatList,
   Linking,
-  Alert,
 } from "react-native"
 import * as Location from "expo-location"
 import * as SecureStore from "expo-secure-store"
 import { Card, Divider } from "react-native-paper"
 import { useAppDispatch } from "../../redux/app/rtkHooks"
 import { useToast } from "react-native-toast-notifications"
-import { BASE_URL } from "../../config/url"
 import { RefreshControl } from "react-native-gesture-handler"
 import { themeColors } from "../../config/themeColors"
 import { getNearPassengersAPI } from "../../services/getNearPassengersAPI"
@@ -22,11 +20,9 @@ import { instance } from "../../services/api"
 import { styles } from "./styles"
 import {
   DriverCardData,
-  SharedFlatListHeader,
   DriverMapView,
   PassengerMapView,
 } from "../../components/index"
-import { setUser } from "../../redux/login/loginSlice"
 import { Durations } from "../../helpers/durations"
 import { finishTourAPI } from "../../services/finishTourAPI"
 import { bookTourAPI } from "../../services/bookTourAPI"
