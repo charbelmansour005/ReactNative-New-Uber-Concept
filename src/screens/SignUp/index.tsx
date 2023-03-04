@@ -1,19 +1,22 @@
-import { Text, SafeAreaView, Pressable } from "react-native"
+import {
+  Text,
+  Pressable,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native"
 import React, { useState, Fragment } from "react"
 import { StatusBar } from "expo-status-bar"
-// UI
 import { useToast } from "react-native-toast-notifications"
 import { Ionicons } from "@expo/vector-icons"
 import { themeColors } from "../../config/themeColors"
-// fetching
 import { useMutation } from "react-query"
 import { instance, signUpURL } from "../../services/api"
-// types
 import { StackNavigationProp } from "@react-navigation/stack"
 import { RootStackParamList } from "../../navigation/Navigation"
 import { styles } from "./styles"
 import { Durations } from "../../helpers/durations"
-// components
+import { z } from "zod"
 import {
   TextInputName,
   TextInputPhone,
@@ -24,22 +27,15 @@ import {
 
 type LoginNavProp = StackNavigationProp<RootStackParamList, "Login">
 
-type SignUpState = {
-  name: string
-  password: string
-  confirmedPassword: string
-  phoneNumber: string
-  role: string
-}
+const SignUpStateSchema = z.object({
+  name: z.string(),
+  password: z.string(),
+  confirmedPassword: z.string(),
+  phoneNumber: z.string(),
+  role: z.string(),
+})
 
-type Props = {
-  navigation: LoginNavProp
-}
-
-interface SignUpTexts {
-  title: string
-  subTitle: string
-}
+type SignUpState = z.infer<typeof SignUpStateSchema>
 
 const initialSignUpState: SignUpState = {
   name: "",
@@ -49,17 +45,23 @@ const initialSignUpState: SignUpState = {
   role: "",
 }
 
+type Props = {
+  navigation: LoginNavProp
+}
+
+interface SignUpTexts {
+  title: string
+}
+
+let SignUpTexts: SignUpTexts = {
+  title: "Create your account",
+}
+
 const SignUp = ({ navigation }: Props) => {
   const { replace } = navigation
 
   const [signupState, setSignUpState] =
     useState<SignUpState>(initialSignUpState)
-
-  const SignUpTexts: SignUpTexts = {
-    title: "Create your account",
-    subTitle:
-      "Please note that phone verification is required for signup. Your number will be used to verify your identity upon login.",
-  }
 
   const toast = useToast()
 
@@ -115,26 +117,10 @@ const SignUp = ({ navigation }: Props) => {
     mutate()
   }
 
-  const header = () => (
+  const header = () => <Text style={styles.title}>{SignUpTexts.title}</Text>
+
+  const body = () => (
     <Fragment>
-      <Text style={styles.title}>{SignUpTexts.title}</Text>
-      <Text style={styles.paragraph}>{SignUpTexts.subTitle}</Text>
-    </Fragment>
-  )
-
-  const isDisabled =
-    isSigningUp ||
-    !signupState.role ||
-    !signupState.name ||
-    signupState.password.length < 8 ||
-    !signupState.confirmedPassword ||
-    !signupState.phoneNumber
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={themeColors.googleGray} style="light" />
-      {header()}
-
       <TextInputName
         name={signupState.name}
         setName={(value) =>
@@ -145,7 +131,10 @@ const SignUp = ({ navigation }: Props) => {
       <TextInputPhone
         phoneNumber={signupState.phoneNumber}
         setPhoneNumber={(value) =>
-          setSignUpState((prevState) => ({ ...prevState, phoneNumber: value }))
+          setSignUpState((prevState) => ({
+            ...prevState,
+            phoneNumber: value,
+          }))
         }
       />
 
@@ -172,53 +161,68 @@ const SignUp = ({ navigation }: Props) => {
         }
         role={signupState.role}
       />
+    </Fragment>
+  )
 
-      <Pressable
-        android_ripple={{ color: "white" }}
-        style={{
-          backgroundColor: themeColors.googleBlue,
-          borderWidth: 2,
-          borderColor: themeColors.googleBlue,
-          ...styles.signUpBtn,
-        }}
-        onPress={onSignUp}
-        disabled={isDisabled}
-      >
-        <Text
-          style={{
-            color: "white",
-            fontSize: 15,
-            textAlign: "center",
-            fontWeight: "bold",
-          }}
-        >
-          {isSigningUp ? "Loading" : "Create Account"}
-        </Text>
-      </Pressable>
+  const signUpButton = () => (
+    <Pressable
+      android_ripple={{ color: "white" }}
+      style={{
+        backgroundColor: themeColors.googleBlue,
+        borderWidth: 2,
+        borderColor: themeColors.googleBlue,
+        ...styles.signUpBtn,
+      }}
+      onPress={onSignUp}
+      disabled={isDisabled}
+    >
+      <Text style={styles.signUpText}>
+        {isSigningUp ? "Loading" : "Create Account"}
+      </Text>
+    </Pressable>
+  )
 
-      <Pressable
-        android_ripple={{ color: "white" }}
-        style={{
-          backgroundColor: "transparent",
-          borderColor: themeColors.googleBlue,
-          borderWidth: 2,
-          ...styles.signUpBtn,
-        }}
-        onPress={() => replace("Login")}
-        disabled={isSigningUp}
-      >
-        <Text
-          style={{
-            color: themeColors.googleBlue,
-            fontSize: 15,
-            textAlign: "center",
-            fontWeight: "bold",
-          }}
-        >
-          Login
-        </Text>
-      </Pressable>
-    </SafeAreaView>
+  const footer = () => (
+    <>
+      <View style={styles.orWrapper}>
+        <View style={styles.orLine} />
+        <Text style={{ marginHorizontal: 10 }}>OR</Text>
+        <View style={styles.orLine} />
+      </View>
+
+      <View style={styles.loginWrapper}>
+        <Text style={styles.loginText}>Already have an account?</Text>
+        <TouchableOpacity>
+          <Text style={styles.signupText} onPress={() => replace("Login")}>
+            Log in
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  )
+
+  const isDisabled =
+    isSigningUp ||
+    !signupState.role ||
+    !signupState.name ||
+    signupState.password.length < 8 ||
+    !signupState.confirmedPassword ||
+    !signupState.phoneNumber
+
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContainer}
+    >
+      <StatusBar backgroundColor="#f7f7f8" style="dark" />
+      {header()}
+
+      {body()}
+
+      {signUpButton()}
+
+      {footer()}
+    </ScrollView>
   )
 }
 

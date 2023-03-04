@@ -5,6 +5,7 @@ import {
   Pressable,
   ActivityIndicator,
   Platform,
+  useWindowDimensions,
 } from "react-native"
 import React, { useState } from "react"
 import { StatusBar } from "expo-status-bar"
@@ -16,11 +17,11 @@ import * as SecureStore from "expo-secure-store"
 import { useMutation } from "react-query"
 import { setUser } from "../../redux/login/loginSlice"
 import { useAppDispatch } from "../../redux/app/rtkHooks"
-import { themeColors } from "../../config/themeColors"
 import { useToast } from "react-native-toast-notifications"
 import { Ionicons } from "@expo/vector-icons"
 import { styles } from "./styles"
 import { Durations } from "../../helpers/durations"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -35,10 +36,12 @@ const Login = ({ navigation }: Props) => {
   const isAndroid = Platform.OS === "android"
   const dispatch = useAppDispatch()
   const { replace } = navigation
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [password, setPassword] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
 
   const toast = useToast()
+
+  const windowHeight = useWindowDimensions().height
 
   const errorToast = (error: any) =>
     toast.show(`${error}`, {
@@ -90,41 +93,29 @@ const Login = ({ navigation }: Props) => {
     mutate()
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={themeColors.googleGray} style="light" />
+  const title = () => <Text style={styles.titleText}>Uber Tour</Text>
 
-      <Text style={styles.titleText}>Welcome back</Text>
+  const bodyInputs = () => (
+    <View style={styles.inputWrapper}>
+      <TextInputNumber
+        phoneNumber={phoneNumber}
+        setPhoneNumber={setPhoneNumber}
+      />
 
-      <View style={styles.inputWrapper}>
-        <TextInputNumber
-          phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
-        />
+      <TextInputPass password={password} setPassword={setPassword} />
+    </View>
+  )
 
-        <TextInputPass password={password} setPassword={setPassword} />
-      </View>
-
-      <Pressable
-        disabled={!phoneNumber || password === "" || isLoggingIn}
-        android_ripple={{ color: "white" }}
-        style={styles.loginButton}
-        onPress={onSignIn}
-      >
-        {isLoggingIn ? (
-          isAndroid ? (
-            <ActivityIndicator size={"small"} color={"white"} />
-          ) : (
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                ...styles.loadingLogin,
-              }}
-            >
-              Logging in
-            </Text>
-          )
+  const loginButton = () => (
+    <Pressable
+      disabled={!phoneNumber || password === "" || isLoggingIn}
+      android_ripple={{ color: "white" }}
+      style={styles.loginButton}
+      onPress={onSignIn}
+    >
+      {isLoggingIn ? (
+        isAndroid ? (
+          <ActivityIndicator size={"small"} color={"white"} />
         ) : (
           <Text
             style={{
@@ -133,17 +124,57 @@ const Login = ({ navigation }: Props) => {
               ...styles.loadingLogin,
             }}
           >
-            Login
+            Logging in
           </Text>
-        )}
-      </Pressable>
+        )
+      ) : (
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "normal",
+            ...styles.loadingLogin,
+          }}
+        >
+          Login
+        </Text>
+      )}
+    </Pressable>
+  )
 
-      <View style={{ display: "flex", flexDirection: "row" }}>
-        <Text style={styles.loginText}>Don't have an account?</Text>
+  const orSeperator = () => (
+    <View style={styles.orWrapper}>
+      <View style={styles.orLine} />
+      <Text style={{ marginHorizontal: 10 }}>OR</Text>
+      <View style={styles.orLine} />
+    </View>
+  )
+
+  const signUpPrompt = () => (
+    <View style={styles.noAccountWrapper}>
+      <Text style={styles.loginText}>Don't have an account?</Text>
+      <TouchableOpacity>
         <Text style={styles.signupText} onPress={() => replace("SignUp")}>
           Sign up
         </Text>
-      </View>
+      </TouchableOpacity>
+    </View>
+  )
+
+  return (
+    <SafeAreaView
+      style={{ minHeight: Math.round(windowHeight), ...styles.container }}
+    >
+      <StatusBar backgroundColor="#f7f7f8" style="dark" />
+
+      {title()}
+
+      {bodyInputs()}
+
+      {loginButton()}
+
+      {orSeperator()}
+
+      {signUpPrompt()}
     </SafeAreaView>
   )
 }

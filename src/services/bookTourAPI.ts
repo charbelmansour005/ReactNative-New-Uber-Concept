@@ -1,10 +1,13 @@
 import { AxiosError } from "axios"
 import { instance } from "./api"
+import { z } from "zod"
 
-interface CustomError {
-  status?: number
-  message: string
-}
+const CustomerErrorSchema = z.object({
+  status: z.number(),
+  message: z.string(),
+})
+
+type CustomError = z.infer<typeof CustomerErrorSchema>
 
 export const bookTourAPI = async (id: string | null) => {
   try {

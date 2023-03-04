@@ -18,18 +18,28 @@ const RadioButtonRole = ({ ...props }: RadioButtonRoleProps) => {
         onValueChange={(value) => props.setRole(value)}
         value={props.role}
       >
-        <View style={{ display: "flex", flexDirection: "row" }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            height: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <RadioButton.Item
             label="I'm a Driver"
             value="driver"
-            color={themeColors.googleGreen}
-            labelVariant="bodyMedium"
+            color={themeColors.googleBlue}
+            labelVariant="bodySmall"
+            position="leading"
           />
           <RadioButton.Item
             label="I'm a Passenger"
             value="passenger"
-            color={themeColors.googleGreen}
-            labelVariant="bodyMedium"
+            color={themeColors.googleBlue}
+            labelVariant="bodySmall"
+            position="leading"
           />
         </View>
       </RadioButton.Group>

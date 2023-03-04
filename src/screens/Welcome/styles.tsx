@@ -9,13 +9,13 @@ export const styles = StyleSheet.create({
     backgroundColor: "transparent",
     height: 35,
     borderColor: "white",
-    borderWidth: 0.5,
+    borderWidth: 1,
   },
   chipWrapper: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "30%",
+    marginTop: "5%",
   },
   background: {
     flex: 1,

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import * as React from 'react';\nexport var forwardRef = React.forwardRef;","map":{"version":3,"mappings":"AAAA,OAAO,KAAKA,KAAK,MAAM,OAAO;AAoB9B,OAAO,IAAMC,UAEgB,GAAGD,KAAK,CAACC,UAAU","names":["React","forwardRef"],"sourceRoot":"../../src","sources":["forwardRef.tsx"],"sourcesContent":[null]},"metadata":{},"sourceType":"module"}

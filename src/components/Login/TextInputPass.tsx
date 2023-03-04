@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { IconButton, TextInput } from "react-native-paper"
+import { themeColors } from "../../config/themeColors"
 
 type TextInputPassProps = {
   password: string | undefined
@@ -19,10 +20,11 @@ const TextInputPass = ({ password, setPassword }: TextInputPassProps) => {
       <TextInput
         style={styles.input}
         mode="flat"
+        activeOutlineColor={themeColors.googleBlue}
         activeUnderlineColor="#4A89F3"
         textColor="black"
         placeholderTextColor="silver"
-        outlineColor="gray"
+        outlineColor={themeColors.googleLightGray}
         placeholder="Password"
         secureTextEntry={hidePassword}
         value={password}
@@ -31,6 +33,7 @@ const TextInputPass = ({ password, setPassword }: TextInputPassProps) => {
       <IconButton
         icon={hidePassword ? "eye-off" : "eye"}
         onPress={toggleHidePassword}
+        style={{ position: "absolute", right: 0 }}
       />
     </View>
   )

@@ -2,9 +2,7 @@ import { StyleSheet, Text, View } from "react-native"
 import React from "react"
 import { themeColors } from "../../../config/themeColors"
 
-type Props = {}
-
-const PassengerFlatListFooter = (props: Props) => {
+const PassengerFlatListFooter = () => {
   return (
     <View style={{ marginBottom: 20 }}>
       <View style={styles.listFooterWrapper}>

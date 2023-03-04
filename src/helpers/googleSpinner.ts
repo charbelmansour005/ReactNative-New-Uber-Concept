@@ -1,8 +1,11 @@
 import { themeColors } from "../config/themeColors"
 
-export const googleColors: string[] = [
+const googleColors: string[] = [
   themeColors.googleBlue,
   themeColors.googleGreen,
   themeColors.googleRed,
   themeColors.googleYellow,
 ]
+
+const randomSpinnerColor = googleColors[Math.floor(Math.random() * 4)]
+export const chosenSpinnerColor: string = randomSpinnerColor

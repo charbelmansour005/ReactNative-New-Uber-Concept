@@ -1,0 +1,1 @@
+{"ast":null,"code":"import * as React from 'react';\nexport default React.createContext(null);","map":{"version":3,"mappings":"AAAA,OAAO,KAAKA,KAAK,MAAM,OAAO;AAE9B,eAAeA,KAAK,CAACC,aAAa,CAA8B,IAAI,CAAC","names":["React","createContext"],"sourceRoot":"../../../src","sources":["utils/DrawerGestureContext.tsx"],"sourcesContent":[null]},"metadata":{},"sourceType":"module"}

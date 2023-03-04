@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native"
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native"
 import React from "react"
 import { themeColors } from "../../../config/themeColors"
 

@@ -1,10 +1,13 @@
 import { instance } from "./api"
 import { AxiosError } from "axios"
+import { z } from "zod"
 
-interface CustomError {
-  status?: number
-  message: string
-}
+const CustomerErrorSchema = z.object({
+  status: z.number(),
+  message: z.string(),
+})
+
+type CustomError = z.infer<typeof CustomerErrorSchema>
 
 export const finishTourAPI = async (id: string | null) => {
   try {
@@ -12,7 +15,6 @@ export const finishTourAPI = async (id: string | null) => {
     return response.data
     console.log(response)
   } catch (error) {
-    // Only catch network errors
     if (error instanceof AxiosError) {
       console.log(error)
       throw {

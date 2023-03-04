@@ -1,9 +1,11 @@
-import { StyleSheet, View, Image } from "react-native"
+import { StyleSheet, View, TouchableOpacity } from "react-native"
+import { useToast } from "react-native-toast-notifications"
 import React from "react"
 import { Card, Divider, Paragraph, Title } from "react-native-paper"
 import { Ionicons } from "@expo/vector-icons"
 import { themeColors } from "../../../config/themeColors"
 import { Feather } from "@expo/vector-icons"
+import { Durations } from "../../../helpers/durations"
 
 type PassengerCardProps = {
   index: number
@@ -15,24 +17,20 @@ type PassengerCardProps = {
 }
 
 const PassengerCard = ({ ...props }: PassengerCardProps) => {
+  const toast = useToast()
+
   let driverName = "Unknown"
   let driverPhoneNumber = "Unknown"
   if (props.driver && props.driver.length > 0) {
     driverName = props.driver[0].name
     driverPhoneNumber = props.driver[0].phoneNumber
   }
+
   return (
     <React.Fragment>
-      <Card mode="outlined" style={stylesPassengerCard.cardContainer}>
+      <Card mode="elevated" style={stylesPassengerCard.cardContainer}>
         <Card.Content>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <View style={stylesPassengerCard.cardWrapper}>
             <Title
               style={{
                 color: props.taken ? themeColors.googleBlue : "orange",
@@ -41,26 +39,48 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
             >
               Tour {props.index + 1}
             </Title>
-            <Feather
-              name={props.taken ? "check-circle" : "clock"}
-              selectable={false}
-              size={20}
-              color={props.taken ? themeColors.googleBlue : "orange"}
-            />
+            <TouchableOpacity
+              onPress={() =>
+                toast.show(
+                  `${
+                    props.taken ? "Tour is booked!" : "Waiting for a driver."
+                  }`,
+                  {
+                    duration: Durations.SHORT,
+                    type: props.taken ? "success" : "warning",
+                  }
+                )
+              }
+            >
+              <Feather
+                name={props.taken ? "check" : "clock"}
+                selectable={false}
+                size={18}
+                color={props.taken ? themeColors.googleBlue : "orange"}
+              />
+            </TouchableOpacity>
           </View>
+
           <Divider style={stylesPassengerCard.divider} />
+
           <View style={stylesPassengerCard.cardContent}>
-            <Ionicons name="md-time" size={15} color="gray" />
+            <Ionicons
+              name="md-time"
+              size={15}
+              color={themeColors.googleGreen}
+            />
             <Paragraph style={stylesPassengerCard.cardContentText}>
-              Start: {props.startDate} at {props.startTime}
+              Starts at {props.startDate} at {props.startTime}
             </Paragraph>
           </View>
+
           <View style={stylesPassengerCard.cardContent}>
-            <Ionicons name="md-time" size={15} color="gray" />
+            <Ionicons name="md-time" size={15} color={themeColors.googleRed} />
             <Paragraph style={stylesPassengerCard.cardContentText}>
-              End: {props.endTime}
+              Ends at {props.endTime}
             </Paragraph>
           </View>
+
           <View style={stylesPassengerCard.cardContent}>
             <Ionicons
               name="md-car"
@@ -68,9 +88,10 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
               color={props.taken ? themeColors.googleBlue : "orange"}
             />
             <Paragraph style={stylesPassengerCard.cardContentText}>
-              {props.taken ? "A driver booked your tour!" : "Pending"}
+              {props.taken ? "Booked!" : "Pending"}
             </Paragraph>
           </View>
+
           <View style={stylesPassengerCard.cardContent}>
             <Ionicons
               name="person"
@@ -81,6 +102,7 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
               {driverName}
             </Paragraph>
           </View>
+
           <View style={stylesPassengerCard.cardContent}>
             <Ionicons
               name="ios-call"
@@ -100,10 +122,11 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
 export default PassengerCard
 
 const stylesPassengerCard = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "lightgray",
+  cardWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   cardContainer: {
     marginVertical: "1%",
@@ -122,7 +145,7 @@ const stylesPassengerCard = StyleSheet.create({
     borderColor: themeColors.googleLightGray,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 16,
   },
   cardContent: {
     flexDirection: "row",
@@ -130,12 +153,12 @@ const stylesPassengerCard = StyleSheet.create({
     marginBottom: 8,
   },
   cardContentText: {
-    marginLeft: 8,
+    marginLeft: 5,
     fontSize: 14,
     color: "gray",
   },
   divider: {
-    height: 1,
+    height: 0.5,
     marginVertical: 8,
     backgroundColor: "lightgray",
   },

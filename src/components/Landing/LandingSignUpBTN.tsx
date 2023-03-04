@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
   blueButtons: {
     backgroundColor: themeColors.googleGray,
     width: "48%",
-    padding: 5,
-    borderRadius: 1,
+    padding: 10,
+    borderRadius: 3,
     borderWidth: 0.5,
     borderColor: "darkgray",
   },

@@ -5,7 +5,6 @@ import * as Location from "expo-location"
 import { StatusBar } from "expo-status-bar"
 import { themeColors } from "../../config/themeColors"
 import { Ionicons } from "@expo/vector-icons"
-import { Chip } from "react-native-paper"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { RootStackParamList } from "../../navigation/Navigation"
 import { styles } from "./styles"
@@ -111,8 +110,8 @@ export default function Landing({ navigation }: Props) {
         placement: "center",
         type: "error",
       })
-      // retry after 2 seconds
-      setTimeout(fetchUserLocation, 2000)
+      // retry after 5 seconds
+      setTimeout(fetchUserLocation, 5000)
     }
   }, [landingState.mapRegion])
 
@@ -128,32 +127,43 @@ export default function Landing({ navigation }: Props) {
     },
   ]
 
+  const mapView = () => (
+    <View
+      style={
+        landingState.loading
+          ? { height: landingState.viewHeight, ...styles.blur }
+          : { height: landingState.viewHeight, ...styles.normal }
+      }
+    >
+      <LandingMapView mapRegion={landingState.mapRegion} />
+    </View>
+  )
+
+  const loader = () => (
+    <View style={styles.centerLoad}>
+      <OriginalLoader />
+    </View>
+  )
+
+  const footer = () => (
+    <View style={wrapperStyles}>
+      {landingState.errorMsg && <Text>{landingState.errorMsg}</Text>}
+      <View style={styles.belowButtons}>
+        <LandingSignUpBTN replace={replace} />
+        <LandingSignInBTN replace={replace} />
+      </View>
+    </View>
+  )
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={themeColors.googleGray} style="light" />
-      <View
-        style={
-          landingState.loading
-            ? { height: landingState.viewHeight, ...styles.blur }
-            : { height: landingState.viewHeight, ...styles.normal }
-        }
-      >
-        <LandingMapView mapRegion={landingState.mapRegion} />
-      </View>
-      <>
-        {landingState.loading && (
-          <View style={styles.centerLoad}>
-            <OriginalLoader />
-          </View>
-        )}
-      </>
-      <View style={wrapperStyles}>
-        {landingState.errorMsg && <Text>{landingState.errorMsg}</Text>}
-        <View style={styles.belowButtons}>
-          <LandingSignUpBTN replace={replace} />
-          <LandingSignInBTN replace={replace} />
-        </View>
-      </View>
+      <StatusBar backgroundColor={themeColors.googleLightGray} style="dark" />
+
+      {mapView()}
+
+      <>{landingState.loading && loader()}</>
+
+      {footer()}
     </SafeAreaView>
   )
 }

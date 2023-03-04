@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet } from "react-native"
 import React from "react"
 import { TextInput } from "react-native-paper"
+import { themeColors } from "../../config/themeColors"
 
 interface Props {
   phoneNumber: string | undefined
@@ -12,13 +13,14 @@ const TextInputNumber = ({ ...props }: Props) => {
     <TextInput
       style={styles.input}
       mode="flat"
+      activeOutlineColor={themeColors.googleBlue}
       activeUnderlineColor="#4A89F3"
       textColor="black"
       placeholderTextColor="silver"
-      outlineColor="gray"
+      outlineColor={themeColors.googleLightGray}
       placeholder="Phone Number"
       keyboardType="numeric"
-      autoFocus={true}
+      autoFocus={false}
       value={props.phoneNumber}
       onChangeText={(value) => props.setPhoneNumber(value)}
     />

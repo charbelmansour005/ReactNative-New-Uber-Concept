@@ -6,6 +6,7 @@ import store from "./src/redux/app/store"
 import { QueryClientProvider, QueryClient } from "react-query"
 import { instance } from "./src/services/api"
 import * as SecureStore from "expo-secure-store"
+import { themeColors } from "./src/config/themeColors"
 
 const queryClient = new QueryClient()
 
@@ -20,10 +21,10 @@ export default function App() {
     return config
   })
   return (
-    <ToastProvider successColor="#28a47c">
+    <ToastProvider successColor={themeColors.googleGreen}>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <Navigation />
+            <Navigation />
         </QueryClientProvider>
       </Provider>
     </ToastProvider>

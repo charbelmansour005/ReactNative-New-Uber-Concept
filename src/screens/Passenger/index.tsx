@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react"
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react"
 import MapView, { Marker } from "react-native-maps"
 import {
   Modal,
@@ -8,10 +8,9 @@ import {
   ActivityIndicator,
   Platform,
   TouchableOpacity,
-  Button,
 } from "react-native"
 import * as Location from "expo-location"
-import { IconButton, Paragraph } from "react-native-paper"
+import { Divider, IconButton } from "react-native-paper"
 import { useAppDispatch } from "../../redux/app/rtkHooks"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { useToast } from "react-native-toast-notifications"
@@ -19,13 +18,27 @@ import { themeColors } from "../../config/themeColors"
 import { startTourAPI } from "../../services/startTourAPI"
 import { fetchTours } from "../../redux/passenger/tour/tourSlice"
 import { styles } from "./styles"
-import { PassengerFlatlist } from "../../components"
+import {
+  PassengerFlatlist,
+  PassengerMapInfoModalContent,
+  PassengerTourStartText,
+  PassengerTourEndText,
+} from "../../components"
 import { instance } from "../../services/api"
-import { useNavigation } from "@react-navigation/native"
 import { Feather } from "@expo/vector-icons"
 import { StatusBar } from "expo-status-bar"
 import { Durations } from "../../helpers/durations"
-import { googleColors } from "../../helpers/googleSpinner"
+import { chosenSpinnerColor } from "../../helpers/googleSpinner"
+import { DrawerNavigationProp } from "@react-navigation/drawer"
+import { RootStackParamList } from "../../navigation/Navigation"
+
+const isAndroid = Platform.OS === "android"
+
+type MyScreenNavigationProp = DrawerNavigationProp<RootStackParamList>
+
+interface MyScreenProps {
+  navigation: MyScreenNavigationProp
+}
 
 const initialRegion = {
   latitude: 33.8938,
@@ -84,22 +97,15 @@ type HeaderRightProps = {
   mapVisible: boolean
 }
 
-const HeaderRight: React.FC<HeaderRightProps> = ({
+const HeaderRight = ({
   onPressAdd,
   onPressMap,
   onLongPressMap,
   onPressSendLocation,
   mapVisible,
-}) => {
+}: HeaderRightProps) => {
   return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={styles.headerRightWrapper}>
       {mapVisible && (
         <TouchableOpacity onPress={onPressSendLocation}>
           <Feather
@@ -114,7 +120,7 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
       )}
       <TouchableOpacity onPress={onPressMap} onLongPress={onLongPressMap}>
         <Feather
-          name={mapVisible ? "eye-off" : "eye"}
+          name={mapVisible ? "minimize-2" : "maximize-2"}
           size={23}
           color={mapVisible ? "orange" : themeColors.googleBlue}
           style={{
@@ -137,8 +143,7 @@ const HeaderRight: React.FC<HeaderRightProps> = ({
   )
 }
 
-const Passenger = ({ navigation }: any) => {
-  // const navigation = useNavigation()
+function Passenger({ navigation }: MyScreenProps): JSX.Element {
   const toast = useToast()
   const [passengerState, setPassengerState] = useState<PassengerState>(
     initialPassengerState
@@ -220,7 +225,7 @@ const Passenger = ({ navigation }: any) => {
     })
   }
 
-  const onChangeEndTime = (event: any, selectedDate: any) => {
+  const onChangeEndTime = (event: any, selectedDate: any): null | undefined => {
     const currentDate = selectedDate || passengerState.date
     setPassengerState((prevState) => ({
       ...prevState,
@@ -250,17 +255,17 @@ const Passenger = ({ navigation }: any) => {
     }))
   }
 
-  const minDate = new Date() // current date and time
+  const minDate = new Date()
   const maxDate = new Date("2023-12-31T23:59:00")
 
-  const showModeStart = (currentMode: any) => {
+  const showModeStart = (currentMode: any): void => {
     setPassengerState((prevState) => ({
       ...prevState,
       showStartDate: true,
       startDatemode: currentMode,
     }))
   }
-  const showModeEnd = (currentMode: any) => {
+  const showModeEnd = (currentMode: any): void => {
     setPassengerState((prevState) => ({
       ...prevState,
       showEndDate: true,
@@ -268,8 +273,7 @@ const Passenger = ({ navigation }: any) => {
     }))
   }
 
-  // auto Send Location - both
-  const autoSendLocation = async () => {
+  const autoSendLocation = async (): Promise<void> => {
     setPassengerState((prevState) => ({ ...prevState, fetchingLocation: true }))
     let { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== "granted") {
@@ -310,8 +314,7 @@ const Passenger = ({ navigation }: any) => {
           type: "error",
         }
       )
-      // retry after 2 seconds
-      setTimeout(autoSendLocation, 10000)
+      setTimeout(autoSendLocation, 10000) // auto retry after 10 seconds!
     }
     setPassengerState((prevState) => ({
       ...prevState,
@@ -319,14 +322,12 @@ const Passenger = ({ navigation }: any) => {
     }))
   }
 
-  // both
   useEffect(() => {
     dispatch(fetchTours())
     autoSendLocation()
   }, [])
 
-  const startTourHandler = async () => {
-    // backend
+  const startTourHandler = async (): Promise<void> => {
     setPassengerState((prevState) => ({
       ...prevState,
       startText: "",
@@ -355,8 +356,117 @@ const Passenger = ({ navigation }: any) => {
     }
   }
 
-  const randomSpinnerColor = googleColors[Math.floor(Math.random() * 10)]
-  const chosenSpinnerColor: string = randomSpinnerColor
+  const handleCloseTourModal = (): void =>
+    setPassengerState((prevState) => ({
+      ...prevState,
+      startText: "",
+      endText: "",
+      startTextUI: "",
+      endTextUI: "",
+      modalVisible: false,
+    }))
+
+  const handleCloseMapOptionModal = useCallback((): void => {
+    setPassengerState((prevState) => ({
+      ...prevState,
+      mapOptionModalVisible: false,
+    }))
+  }, [setPassengerState])
+
+  const ItemSeperatorComponent = (): JSX.Element => (
+    <View style={{ marginHorizontal: "5%", marginVertical: "1%" }}>
+      <Divider style={{ height: 1 }} />
+    </View>
+  )
+
+  const pickStartDay = (): JSX.Element => (
+    <Pressable
+      android_ripple={{ color: "gray" }}
+      style={styles.CalendatButtons}
+      onPress={() => showModeStart("date")}
+    >
+      <Text style={styles.CalendarButtonsText}>Pick start day</Text>
+    </Pressable>
+  )
+
+  const pickStartTime = (): JSX.Element => (
+    <Pressable
+      android_ripple={{ color: "gray" }}
+      style={styles.CalendatButtons}
+      onPress={() => showModeStart("time")}
+    >
+      <Text style={styles.CalendarButtonsText}>Pick start time</Text>
+    </Pressable>
+  )
+
+  const pickEndTime = (): JSX.Element => (
+    <Pressable
+      android_ripple={{ color: "gray" }}
+      style={styles.CalendatButtons}
+      onPress={() => showModeEnd("time")}
+    >
+      <Text style={styles.CalendarButtonsText}>Pick end time</Text>
+    </Pressable>
+  )
+
+  const handleClearStartText = (): void =>
+    setPassengerState((prevState) => ({
+      ...prevState,
+      startText: "",
+      startTextUI: "",
+    }))
+
+  const handleClearEndText = (): void =>
+    setPassengerState((prevState) => ({
+      ...prevState,
+      endText: "",
+      endTextUI: "",
+    }))
+
+  const dataSeperator = (): JSX.Element => <View style={styles.dataSeperator} />
+
+  const showTourStartsOn = (): JSX.Element => (
+    <>
+      {dataSeperator()}
+      <PassengerTourStartText
+        handleClearStartText={handleClearStartText}
+        startText={passengerState.startTextUI}
+      />
+    </>
+  )
+
+  const showTourEndsAt = (): JSX.Element => (
+    <PassengerTourEndText
+      handleClearEndText={handleClearEndText}
+      endTextUI={passengerState.endTextUI}
+    />
+  )
+
+  const cancelStartButtons = (): JSX.Element => (
+    <View style={styles.cancelStartButtonsWrapper}>
+      <IconButton
+        containerColor="white"
+        icon="close"
+        iconColor={themeColors.googleRed}
+        style={{
+          marginVertical: 10,
+        }}
+        size={20}
+        onPress={handleCloseTourModal}
+      />
+      <IconButton
+        disabled={!passengerState.startText || !passengerState.endText}
+        containerColor="white"
+        icon="check"
+        iconColor={themeColors.googleGreen}
+        style={{
+          marginVertical: 10,
+        }}
+        size={20}
+        onPress={startTourHandler}
+      />
+    </View>
+  )
 
   return (
     <React.Fragment>
@@ -377,32 +487,22 @@ const Passenger = ({ navigation }: any) => {
             <>
               {passengerState.fetchingLocation && (
                 <React.Fragment>
-                  <ActivityIndicator
-                    size="small"
-                    color={chosenSpinnerColor}
-                    style={{
-                      position: "absolute",
-                      left: 1,
-                      right: 1,
-                      top: 1,
-                      bottom: 1,
-                    }}
-                  />
+                  {isAndroid && (
+                    <ActivityIndicator
+                      size="small"
+                      color={chosenSpinnerColor}
+                      style={styles.androidActivity}
+                    />
+                  )}
                 </React.Fragment>
               )}
             </>
           </View>
         )}
-        <View
-          style={{
-            borderTopColor: "white",
-            borderTopWidth: 3,
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
+        <View style={styles.errorWrapper}>
           {passengerState.errorMsg && <Text>{passengerState.errorMsg}</Text>}
         </View>
+
         <Modal
           animationType="fade"
           transparent={true}
@@ -416,21 +516,10 @@ const Passenger = ({ navigation }: any) => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              {/* date start  */}
-              <Pressable
-                android_ripple={{ color: "gray" }}
-                style={styles.CalendatButtons}
-                onPress={() => showModeStart("date")}
-              >
-                <Text style={styles.CalendarButtonsText}>Pick start day</Text>
-              </Pressable>
-              <Pressable
-                android_ripple={{ color: "gray" }}
-                style={styles.CalendatButtons}
-                onPress={() => showModeStart("time")}
-              >
-                <Text style={styles.CalendarButtonsText}>Pick start time</Text>
-              </Pressable>
+              {pickStartDay()}
+
+              {pickStartTime()}
+
               {passengerState.showStartDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -444,13 +533,9 @@ const Passenger = ({ navigation }: any) => {
                   onChange={onChangeStartDateTime}
                 />
               )}
-              <Pressable
-                android_ripple={{ color: "gray" }}
-                style={styles.CalendatButtons}
-                onPress={() => showModeEnd("time")}
-              >
-                <Text style={styles.CalendarButtonsText}>Pick end time</Text>
-              </Pressable>
+
+              {pickEndTime()}
+
               {passengerState.showEndDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -462,139 +547,27 @@ const Passenger = ({ navigation }: any) => {
                   onChange={onChangeEndTime}
                 />
               )}
-              {passengerState.startText && (
-                <>
-                  <View
-                    style={{
-                      height: 1,
-                      width: "100%",
-                      marginHorizontal: 3,
-                      backgroundColor: "gray",
-                      marginVertical: 2,
-                      borderRadius: 3,
-                    }}
-                  />
-                  <View style={styles.ChosenData}>
-                    <Text
-                      onPress={() => {
-                        setPassengerState((prevState) => ({
-                          ...prevState,
-                          startText: "",
-                          startTextUI: "",
-                        }))
-                      }}
-                      style={{
-                        fontWeight: "bold",
-                        color: "white",
-                        textAlign: "center",
-                      }}
-                    >
-                      Tour starts on {passengerState.startTextUI}
-                    </Text>
-                  </View>
-                </>
-              )}
-              {passengerState.endText && (
-                <View style={styles.ChosenData}>
-                  <Text
-                    onPress={() => {
-                      setPassengerState((prevState) => ({
-                        ...prevState,
-                        endText: "",
-                        endTextUI: "",
-                      }))
-                    }}
-                    style={{
-                      fontWeight: "bold",
-                      color: "white",
-                      textAlign: "center",
-                    }}
-                  >
-                    Tour ends at {passengerState.endTextUI}
-                  </Text>
-                </View>
-              )}
-              {/* date end */}
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <IconButton
-                  containerColor="white"
-                  icon="close"
-                  iconColor={themeColors.googleRed}
-                  style={{
-                    marginVertical: 10,
-                    marginHorizontal: "25%",
-                  }}
-                  size={20}
-                  onPress={() => {
-                    setPassengerState((prevState) => ({
-                      ...prevState,
-                      startText: "",
-                      endText: "",
-                      startTextUI: "",
-                      endTextUI: "",
-                      modalVisible: false,
-                    }))
-                  }}
-                />
-                <IconButton
-                  disabled={
-                    !passengerState.startText || !passengerState.endText
-                  }
-                  containerColor="white"
-                  icon="check"
-                  iconColor={themeColors.googleGreen}
-                  style={{
-                    marginVertical: 10,
-                    marginHorizontal: "25%",
-                  }}
-                  size={20}
-                  onPress={startTourHandler}
-                />
-              </View>
+
+              {passengerState.startText && showTourStartsOn()}
+
+              {passengerState.endText && showTourEndsAt()}
+
+              {cancelStartButtons()}
             </View>
           </View>
         </Modal>
-        {/* options modal  */}
+
         <Modal
           visible={passengerState.mapOptionModalVisible}
           animationType="slide"
           transparent={true}
         >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Paragraph style={{ padding: 10 }}>
-                {
-                  "The map allows you to locate where you currently are\n\nYou can press on the eye to toggle it (show/hide)"
-                }
-              </Paragraph>
-              <TouchableOpacity
-                onPress={() =>
-                  setPassengerState((prevState) => ({
-                    ...prevState,
-                    mapOptionModalVisible: false,
-                  }))
-                }
-                style={{
-                  marginVertical: "5%",
-                  backgroundColor: "silver",
-                  padding: 5,
-                  paddingHorizontal: 9,
-                  borderRadius: 5,
-                }}
-              >
-                <Paragraph style={{ fontSize: 13 }}>Close</Paragraph>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <PassengerMapInfoModalContent
+            handleCloseMapOptionModal={handleCloseMapOptionModal}
+          />
         </Modal>
-        {/* passenger flatlist  */}
-        <PassengerFlatlist />
+
+        <PassengerFlatlist ItemSeperatorComponent={ItemSeperatorComponent} />
       </View>
     </React.Fragment>
   )

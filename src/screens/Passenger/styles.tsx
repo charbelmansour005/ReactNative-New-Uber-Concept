@@ -85,14 +85,14 @@ export const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
     textAlign: "center",
-    fontWeight: "bold",
+    fontWeight: "normal",
     padding: 5,
   },
   CalendatButtons: {
     backgroundColor: themeColors.googleBlue,
     paddingVertical: 5,
     width: "100%",
-    borderRadius: 0,
+    borderRadius: 8,
     marginVertical: 2,
   },
   container: {
@@ -134,5 +134,44 @@ export const styles = StyleSheet.create({
   modalText: {
     fontSize: 24,
     marginBottom: 20,
+  },
+  androidActivity: {
+    position: "absolute",
+    left: 1,
+    right: 1,
+    top: 1,
+    bottom: 1,
+  },
+  errorWrapper: {
+    borderTopColor: "white",
+    borderTopWidth: 3,
+    display: "flex",
+    flexDirection: "row",
+  },
+  chosenText: {
+    fontWeight: "normal",
+    color: "white",
+    textAlign: "center",
+  },
+  dataSeperator: {
+    height: 1,
+    width: "100%",
+    marginHorizontal: 3,
+    backgroundColor: "gray",
+    marginVertical: 2,
+    borderRadius: 3,
+  },
+  cancelStartButtonsWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+  },
+  headerRightWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 })

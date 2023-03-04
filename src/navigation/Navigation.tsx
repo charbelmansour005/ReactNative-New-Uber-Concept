@@ -14,8 +14,10 @@ import {
   Driver,
   Passenger,
   Intro,
+  Weather,
 } from "../screens"
 import Settings from "../screens/Settings"
+import { chosenScreenAnimation } from "../helpers/screen_animations"
 
 export type RootStackParamList = {
   Landing: undefined
@@ -35,7 +37,7 @@ const Navigation = () => {
   const role = useAppSelector((state) => state.user.user?.role)
   const shown = useAppSelector((state) => state.topBar.shown)
 
-  const handlePress = () => {
+  const handlePress = (): void => {
     Linking.openURL("https://www.google.com/maps/")
   }
 
@@ -50,24 +52,16 @@ const Navigation = () => {
         <Stack.Screen
           name="Intro"
           component={Intro}
-          options={{ animation: "fade_from_bottom" }}
+          options={{ animation: chosenScreenAnimation }}
         />
 
         <Stack.Screen
           name="SignUp"
           component={SignUp}
           options={{
-            title: "Join us",
-            headerShown: true,
+            headerShown: false,
             gestureDirection: "vertical",
-            animation: "slide_from_bottom",
-            headerStyle: {
-              backgroundColor: themeColors.googleGray,
-            },
-            headerTintColor: "white",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
+            animation: chosenScreenAnimation,
           }}
         />
 
@@ -77,7 +71,7 @@ const Navigation = () => {
           options={{
             headerShown: false,
             gestureDirection: "horizontal",
-            animation: "slide_from_right",
+            animation: chosenScreenAnimation,
           }}
         />
 
@@ -88,9 +82,9 @@ const Navigation = () => {
             title: "",
             headerShown: true,
             gestureDirection: "horizontal",
-            animation: "slide_from_bottom",
+            animation: chosenScreenAnimation,
             headerStyle: {
-              backgroundColor: themeColors.googleGray,
+              backgroundColor: themeColors.googleLightGray,
             },
             headerTintColor: "white",
             headerTitleStyle: {
@@ -100,7 +94,7 @@ const Navigation = () => {
               <>
                 <IconButton
                   icon="information-outline"
-                  iconColor="white"
+                  iconColor={themeColors.googleGray}
                   size={24}
                   onPress={handlePress}
                 />
@@ -117,24 +111,25 @@ const Navigation = () => {
     <NavigationContainer>
       {access_token == null ? (
         <HomeStack />
+      ) : role === "passenger" ? (
+        <Drawer.Navigator initialRouteName="passenger">
+          <Drawer.Screen
+            name="Passenger"
+            component={Passenger}
+            options={{ headerShown: shown ? true : false }}
+          />
+          <Drawer.Screen name="Settings" component={Settings} />
+          <Drawer.Screen name="Weather" component={Weather} />
+        </Drawer.Navigator>
       ) : (
-        <>
-          <Drawer.Navigator
-            initialRouteName={role === "passenger" ? "passenger" : "driver"}
-          >
-            {role === "passenger" && (
-              <Drawer.Screen
-                name="Passenger"
-                component={Passenger}
-                options={{ headerShown: shown ? true : false }}
-              />
-            )}
-            {role === "driver" && (
-              <Drawer.Screen name="Driver" component={Driver} />
-            )}
-            <Drawer.Screen name="Settings" component={Settings} />
-          </Drawer.Navigator>
-        </>
+        <Drawer.Navigator initialRouteName="driver">
+          <Drawer.Screen
+            name="Driver"
+            component={Driver}
+            options={{ headerShown: shown ? true : false }}
+          />
+          <Drawer.Screen name="Settings" component={Settings} />
+        </Drawer.Navigator>
       )}
     </NavigationContainer>
   )

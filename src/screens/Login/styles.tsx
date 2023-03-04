@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native"
+import { themeColors } from "../../config/themeColors"
 
 export const styles = StyleSheet.create({
   inputWrapper: {
@@ -6,22 +7,23 @@ export const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "20%",
+    marginBottom: "10%",
   },
   titleText: {
     color: "black",
     fontWeight: "bold",
     fontSize: 33,
+    marginBottom: "10%",
   },
   loadingLogin: {
     fontSize: 16,
     textAlign: "center",
   },
   loginButton: {
-    marginTop: 15,
+    marginTop: 1,
     backgroundColor: "#4A89F3",
-    padding: 13,
-    width: "90%",
+    padding: 10,
+    width: "83%",
     borderRadius: 8,
   },
   container: {
@@ -39,16 +41,42 @@ export const styles = StyleSheet.create({
   },
   loginText: {
     color: "black",
-    fontSize: 16,
-    marginTop: 15,
+    fontSize: 14,
     textAlign: "center",
   },
   signupText: {
-    color: "#4A89F3",
-    fontSize: 16,
-    marginTop: 15,
+    color: "white",
+    fontSize: 14,
     textAlign: "center",
-    marginLeft: 5,
-    textDecorationLine: "underline",
+    marginLeft: 10,
+    fontWeight: "normal",
+    backgroundColor: themeColors.googleBlue,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+  },
+  orWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    marginVertical: "10%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  orLine: {
+    height: 1,
+    backgroundColor: themeColors.googleLightGray,
+    width: "30%",
+  },
+  noAccountWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#dbdbdb",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 8,
+    width: "83%",
+    borderWidth: 1,
+    borderColor: themeColors.googleLightGray,
   },
 })

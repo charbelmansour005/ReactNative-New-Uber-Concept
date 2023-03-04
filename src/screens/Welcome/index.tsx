@@ -1,8 +1,7 @@
-import { Pressable, Text, View, ImageBackground } from "react-native"
+import { Text, View, ImageBackground, TouchableOpacity } from "react-native"
 import LottieView from "lottie-react-native"
 import { StatusBar } from "expo-status-bar"
 import React from "react"
-import { themeColors } from "../../config/themeColors"
 import { RootStackParamList } from "../../navigation/Navigation"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { styles } from "./styles"
@@ -14,13 +13,13 @@ type Props = {
   navigation: IntroNavProp
 }
 
-type WelcomeTexts = {
+interface WelcomeTexts {
   title: string
   subTitle: string
   start: string
 }
 
-function Welcome({ navigation }: Props) {
+function Welcome({ navigation }: Props): JSX.Element {
   const { replace } = navigation
 
   const WelcomeTexts: WelcomeTexts = {
@@ -59,17 +58,12 @@ function Welcome({ navigation }: Props) {
           </Chip>
         </View>
 
-        <Pressable
+        <TouchableOpacity
           style={styles.navigate}
-          android_ripple={{
-            color: themeColors.googleLightGray,
-            radius: 30,
-            borderless: true,
-          }}
           onPress={() => replace("Intro")}
         >
           <Text style={styles.navigateText}>{WelcomeTexts.start}</Text>
-        </Pressable>
+        </TouchableOpacity>
       </ImageBackground>
     </View>
   )
