@@ -1,11 +1,12 @@
-import { Text, View, ImageBackground, TouchableOpacity } from "react-native"
-import LottieView from "lottie-react-native"
+import { Text, View, TouchableOpacity, Image } from "react-native"
 import { StatusBar } from "expo-status-bar"
 import React from "react"
 import { RootStackParamList } from "../../navigation/Navigation"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { styles } from "./styles"
 import { Chip } from "react-native-paper"
+import Images from "../../assets/index"
+import { LinearGradient } from "expo-linear-gradient"
 
 type IntroNavProp = StackNavigationProp<RootStackParamList, "Intro">
 
@@ -24,36 +25,26 @@ function Welcome({ navigation }: Props): JSX.Element {
 
   const WelcomeTexts: WelcomeTexts = {
     title: "UBER TOUR",
-    subTitle: "Thank you for choosing us",
+    subTitle: "Your best guide",
     start: "Get Started",
   }
 
   return (
-    <View style={styles.mainWrapper}>
+    <LinearGradient
+      colors={["#4c669f", "#3b5998", "orange"]}
+      style={{ width: "100%", height: "100%" }}
+    >
       <StatusBar backgroundColor="transparent" style="light" />
 
-      <ImageBackground
-        source={require("../../../assets/slider/image3.jpeg")}
-        style={styles.background}
-        resizeMode="cover"
-        blurRadius={9}
-      >
+      <View style={styles.background}>
         <View style={styles.animationWrapper}>
-          <LottieView
-            speed={1}
-            style={styles.animation}
-            source={{
-              uri: "https://assets6.lottiefiles.com/packages/lf20_svy4ivvy.json",
-            }}
-            autoPlay={true}
-            loop={true}
-          />
+          <Image source={Images.logo} style={styles.animation} />
         </View>
 
         <Text style={styles.welcomeTitle}>{WelcomeTexts.title}</Text>
 
         <View style={styles.chipWrapper}>
-          <Chip mode="outlined" style={styles.chipStyle}>
+          <Chip mode="flat" style={styles.chipStyle}>
             <Text style={styles.subTitle}>{WelcomeTexts.subTitle}</Text>
           </Chip>
         </View>
@@ -64,8 +55,8 @@ function Welcome({ navigation }: Props): JSX.Element {
         >
           <Text style={styles.navigateText}>{WelcomeTexts.start}</Text>
         </TouchableOpacity>
-      </ImageBackground>
-    </View>
+      </View>
+    </LinearGradient>
   )
 }
 

@@ -3,28 +3,29 @@ import { Dimensions, StyleSheet } from "react-native"
 const { height, width } = Dimensions.get("screen")
 
 export const styles = StyleSheet.create({
-  mainWrapper: { flex: 1, height: "100%", width: "100%" },
+  mainWrapper: { height: "100%", width: "100%" },
   subTitle: { color: "white", fontSize: 12 },
   chipStyle: {
-    backgroundColor: "transparent",
+    backgroundColor: "black",
     height: 35,
-    borderColor: "white",
+    borderColor: "black",
     borderWidth: 1,
   },
   chipWrapper: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "5%",
+    marginTop: "35%",
   },
   background: {
     flex: 1,
     height: "100%",
     width: "100%",
-    resizeMode: "cover",
+    // resizeMode: "cover",
+    backgroundColor: "white",
   },
   navigateText: {
-    color: "white",
+    color: "black",
     textAlign: "center",
     textTransform: "uppercase",
     fontWeight: "bold",
@@ -40,9 +41,9 @@ export const styles = StyleSheet.create({
   },
   animation: {
     width: "100%",
-    height: 300,
+    height: 100,
     aspectRatio: 1,
-    marginTop: "10%",
+    marginTop: "40%",
   },
   animationWrapper: {
     display: "flex",
@@ -56,7 +57,7 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
   welcomeTitle: {
-    color: "white",
+    color: "black",
     textAlign: "center",
     fontWeight: "bold",
     fontSize: width * 0.1,
