@@ -28,7 +28,11 @@ const PassengerCard = ({ ...props }: PassengerCardProps) => {
 
   return (
     <React.Fragment>
-      <Card mode="contained" style={stylesPassengerCard.cardContainer}>
+      <Card
+        elevation={4}
+        mode="elevated"
+        style={stylesPassengerCard.cardContainer}
+      >
         <Card.Content>
           <View style={stylesPassengerCard.cardWrapper}>
             <Title
@@ -131,21 +135,23 @@ const stylesPassengerCard = StyleSheet.create({
   cardContainer: {
     marginVertical: "1%",
     marginHorizontal: "2%",
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     borderRadius: 4,
-    shadowColor: "gray",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowColor: "black",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 0,
-    borderColor: themeColors.googleLightGray,
+    shadowRadius: 0.84,
+    // elevation: 5,
+    // padding: 0,
+    // borderColor: themeColors.googleLightGray,
   },
   cardTitle: {
     fontSize: 16,
+    fontWeight: "bold",
+    fontFamily: "System",
   },
   cardContent: {
     flexDirection: "row",

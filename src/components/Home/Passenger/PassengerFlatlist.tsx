@@ -10,6 +10,7 @@ import PassengerCard from "./PassengerCard"
 import PassengerFlatListFooter from "./PassengerFlatListFooter"
 import PassengerListEmptyCmp from "./PassengerListEmptyCmp"
 import PassengerFlatListHeader from "./PassengerFlatListHeader"
+import PassengerLoadingCard from "./PassengerLoadingCard"
 
 type Props = {
   ItemSeperatorComponent: () => JSX.Element
@@ -23,9 +24,16 @@ const PassengerFlatlist = ({ ...props }: Props) => {
 
   const handleRefreshPassengerTours = () => {
     dispatch(fetchTours())
-    toast.show("Tours up to date", {
-      duration: Durations.SHORT,
-    })
+    setTimeout(() => {
+      if (
+        passengerTour.status !== "loading" &&
+        passengerTour.status === "succeeded"
+      ) {
+        toast.show("Tours up to date", {
+          duration: Durations.SHORT,
+        })
+      }
+    }, 1500)
   }
 
   const numPassengerTours = passengerTour.tours.filter((tour) => tour).length
@@ -121,7 +129,7 @@ const PassengerFlatlist = ({ ...props }: Props) => {
         maxToRenderPerBatch={5}
         initialNumToRender={5}
         ListFooterComponent={ListFooterCMP}
-        ItemSeparatorComponent={props.ItemSeperatorComponent}
+        // ItemSeparatorComponent={props.ItemSeperatorComponent}
         refreshControl={
           <RefreshControl
             enabled={passengerTour.status !== "loading" && !passengerTour.error}
@@ -135,14 +143,16 @@ const PassengerFlatlist = ({ ...props }: Props) => {
         }}
         data={passengerTour.tours}
         renderItem={({ item, index }) => (
-          <PassengerCard
-            startDate={new Date(item.startTime).toLocaleDateString()}
-            startTime={new Date(item.startTime).toLocaleTimeString()}
-            endTime={new Date(item.endTime).toLocaleTimeString()}
-            driver={item.driver}
-            index={index}
-            taken={item.taken}
-          />
+          <>
+            <PassengerCard
+              startDate={new Date(item.startTime).toLocaleDateString()}
+              startTime={new Date(item.startTime).toLocaleTimeString()}
+              endTime={new Date(item.endTime).toLocaleTimeString()}
+              driver={item.driver}
+              index={index}
+              taken={item.taken}
+            />
+          </>
         )}
         keyExtractor={(item) => item._id}
       />

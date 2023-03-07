@@ -159,7 +159,7 @@ function Passenger({ navigation }: MyScreenProps): JSX.Element {
       headerTintColor: themeColors.googleBlue,
       headerTitleStyle: {
         fontWeight: "normal",
-        fontSize: 14,
+        fontSize: 18,
       },
       headerLeft: () => (
         <TouchableOpacity
@@ -471,7 +471,7 @@ function Passenger({ navigation }: MyScreenProps): JSX.Element {
   return (
     <React.Fragment>
       <StatusBar backgroundColor="white" style="dark" />
-      <View>
+      <View style={{ backgroundColor: "#f2f2f2" }}>
         {passengerState.mapVisible && (
           <View
             style={

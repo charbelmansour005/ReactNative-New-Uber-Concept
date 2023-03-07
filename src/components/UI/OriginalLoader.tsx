@@ -1,18 +1,26 @@
 import LottieView from "lottie-react-native"
+import { View } from "react-native"
+import LoaderGoogle from "../../assets/10043-loading-google-style.json"
 
 const OriginalLoader = () => {
   return (
-    <LottieView
-      speed={5}
+    <View
       style={{
-        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        display: "flex",
       }}
-      source={{
-        uri: "https://assets6.lottiefiles.com/packages/lf20_2tyhlsvz.json",
-      }}
-      autoPlay={true}
-      loop={true}
-    />
+    >
+      <LottieView
+        speed={1}
+        style={{
+          height: 100,
+        }}
+        source={LoaderGoogle}
+        autoPlay={true}
+        loop={true}
+      />
+    </View>
   )
 }
 

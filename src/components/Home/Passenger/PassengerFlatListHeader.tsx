@@ -39,7 +39,7 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                   <Paragraph
                     style={{ color: "gray", ...styles.cardContentText }}
                   >
-                    Fetching new data...
+                    Loading...
                   </Paragraph>
                 ) : (
                   <>
@@ -71,7 +71,7 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                       }}
                     >
                       {passengerTour.status === "loading"
-                        ? "Fetching new data..."
+                        ? "Loading..."
                         : "Your booked tours"}
                     </Paragraph>
                     <Paragraph
@@ -97,7 +97,7 @@ const PassengerFlatListHeader = ({ ...props }: Props) => {
                       }}
                     >
                       {passengerTour.status === "loading"
-                        ? "Fetching new data..."
+                        ? "Loading..."
                         : "Your pending tours"}
                     </Paragraph>
                     <Paragraph
@@ -140,7 +140,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomColor: "#dbdbdb",
     borderBottomWidth: 1,
-    marginBottom: "2%",
+    marginBottom: "1%",
+    //s
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 2,
+      height: 5,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 1,
+    padding: 0,
+    borderColor: themeColors.googleLightGray,
   },
   chipStyle: {
     height: 35,
