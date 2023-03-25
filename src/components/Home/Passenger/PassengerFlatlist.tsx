@@ -10,13 +10,12 @@ import PassengerCard from "./PassengerCard"
 import PassengerFlatListFooter from "./PassengerFlatListFooter"
 import PassengerListEmptyCmp from "./PassengerListEmptyCmp"
 import PassengerFlatListHeader from "./PassengerFlatListHeader"
-import PassengerLoadingCard from "./PassengerLoadingCard"
 
 type Props = {
   ItemSeperatorComponent: () => JSX.Element
 }
 
-const PassengerFlatlist = ({ ...props }: Props) => {
+const PassengerFlatlist = ({}: Props) => {
   const dispatch = useAppDispatch()
   const [isShown, setIsShown] = useState<boolean>(false)
   const toast = useToast()
@@ -129,7 +128,6 @@ const PassengerFlatlist = ({ ...props }: Props) => {
         maxToRenderPerBatch={5}
         initialNumToRender={5}
         ListFooterComponent={ListFooterCMP}
-        // ItemSeparatorComponent={props.ItemSeperatorComponent}
         refreshControl={
           <RefreshControl
             enabled={passengerTour.status !== "loading" && !passengerTour.error}
