@@ -1,6 +1,6 @@
-<h1>Uber Tour</h1>
+<h1>Uber Concept</h1>
 
-<p>Uber Tour is a React Native application developed and designed for tourists visiting a new country and looking for tours around their area. The app helps connect passengers with local tour drivers using the latest technologies, resulting in a fast and efficient experience. With a sleek UI, the app makes it easy for passengers to schedule a tour in their current location and for nearby tour drivers to be notified of their presence. Once a tour is booked, the passenger's location is shown to the driver, and the app gives the driver the option to open Google Maps to calculate the best route from the driver's current location to the passenger's location. Overall, Uber Tour provides a convenient and innovative solution for tourists looking to explore their new surroundings.</p>
+<p>Uber Concept is a React Native application developed and designed for tourists visiting a new country and looking for tours around their area. The app helps connect passengers with local tour drivers using the latest technologies, resulting in a fast and efficient experience. With a sleek UI, the app makes it easy for passengers to schedule a tour in their current location and for nearby tour drivers to be notified of their presence. Once a tour is booked, the passenger's location is shown to the driver, and the app gives the driver the option to open Google Maps to calculate the best route from the driver's current location to the passenger's location. Overall, Uber Concept provides a convenient and innovative solution for tourists looking to explore their new surroundings.</p>
 
 <h2>Table of Contents</h2>
 
@@ -30,7 +30,7 @@
 <h3>Installation</h3>
 
 <ol>
-  <li>Clone the repo<br><code>git clone https://github.com/[your_username]/Uber-Tour.git</code></li>
+  <li>Clone the repo<br><code>git clone https://github.com/[your_username]/[repo link]</code></li>
   <li>Install NPM packages<br><code>npm install</code></li>
 </ol>
 
